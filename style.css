@@ -1,4 +1,4 @@
-/* Stalen huwelijk · huisstijl · versie 7nov-6 (met Ons pad)
+/* Stalen huwelijk · huisstijl · versie 7nov-8 (met Ons pad)
    Staal en wit, Fredoka voor titels, Nunito voor tekst, stempelrood als enige knipoog. */
 :root {
   --wit: #ffffff;
@@ -250,3 +250,13 @@ h3.sub { font: 600 1.35rem/1.2 var(--display); margin: 0 0 14px; }
 .footer-van { width: 130px; height: 63px; margin: -96px auto 14px; display: block; position: relative; }
 .footer .mark { margin: 0 auto 4px; font: 600 2.4rem/1 var(--display); color: var(--grafiet); }
 .footer p { margin-inline: auto; }
+
+/* je eerder verstuurde antwoord */
+.mijn-antwoord { padding: 22px 24px; margin-top: 8px; border-radius: 6px; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.55); }
+.ma-titel { font: 600 1.15rem/1.2 var(--display); margin: 0 0 12px; }
+.mijn-antwoord dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 18px; margin: 0 0 18px; }
+.mijn-antwoord dt { font: 500 .95rem/1.4 var(--display); opacity: .85; }
+.mijn-antwoord dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+.mijn-antwoord button { font: 600 1.05rem/1 var(--display); background: var(--wit); color: var(--grafiet); border: 0; border-radius: 4px; padding: 13px 22px; cursor: pointer; }
+.rsvp[hidden], .mijn-antwoord[hidden] { display: none; }
+.honing { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }

@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Nunito:wght@400;600;700&display=swap">
-<link rel="stylesheet" href="style.css?v=7nov-7">
+<link rel="stylesheet" href="style.css?v=7nov-8">
 </head>
 <body>
 
@@ -222,6 +222,13 @@
     <h2>Ben je erbij?</h2>
     <p class="lead">Laat het ons weten vóór 30 mei 2027. Dat duurt een minuutje.</p>
 
+    <!-- Je eerder verstuurde antwoord (alleen zichtbaar op het toestel waarmee je het verstuurde) -->
+    <div class="mijn-antwoord" id="mijn-antwoord" hidden>
+      <p class="ma-titel">Je antwoord van <span id="ma-datum"></span></p>
+      <dl id="ma-lijst"></dl>
+      <button type="button" id="ma-aanpassen">Antwoord aanpassen</button>
+    </div>
+
     <form class="rsvp plaat-form" id="rsvp" novalidate>
       <label for="f-naam">Naam of namen</label>
       <input id="f-naam" name="naam" type="text" autocomplete="name" required placeholder="bv. Karl & Adèle">
@@ -249,15 +256,24 @@
       <label for="f-dieet">Dieetwensen of allergieën <span class="opt">(optioneel)</span></label>
       <input id="f-dieet" name="dieet" type="text">
 
-      <label class="check"><input id="f-camionette" name="camionette" type="checkbox" value="Ja"> we komen met de camionette of camper en blijven slapen</label>
+      <fieldset>
+        <legend>Blijven jullie slapen?</legend>
+        <div class="choices">
+          <label><input type="radio" name="slapen" value="Nee" checked> nee, we gaan naar huis</label>
+          <label><input type="radio" name="slapen" value="Camionette of camper"> ja, in de camionette of camper</label>
+          <label><input type="radio" name="slapen" value="Tent"> ja, in een tentje</label>
+        </div>
+      </fieldset>
 
       <label for="f-bericht">Een berichtje voor Leyla &amp; Jan <span class="opt">(optioneel)</span></label>
       <textarea id="f-bericht" name="bericht" rows="3"></textarea>
 
+      <div class="honing" aria-hidden="true"><label for="f-website">Laat dit leeg</label><input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+
       <button type="submit">Verstuur en spring op de fiets</button>
       <p class="status" id="rsvp-status" role="status" aria-live="polite"></p>
     </form>
-    <p class="privacy">Je antwoord gaat rechtstreeks naar Leyla &amp; Jan. Deze site bewaart zelf niets.</p>
+    <p class="privacy">Je antwoord gaat rechtstreeks naar Leyla &amp; Jan. Om het later te kunnen bekijken en aanpassen, onthoudt je eigen browser een kopie op dit toestel. Iets veranderd? Vul het formulier gewoon opnieuw in: je laatste antwoord telt.</p>
   </div>
   <svg class="rand rand-bot" viewBox="0 0 1600 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0,120 H1600 V70 L1500,84 L1420,60 L1310,88 L1230,66 L1120,92 L1040,72 L960,90 L860,62 L780,80 L690,58 L600,86 L500,64 L420,90 L330,70 L240,88 L150,66 L60,84 L0,72 Z"/></svg>
 </section>
@@ -300,7 +316,7 @@
   </div>
 </footer>
 
-<script src="pad.js?v=7nov-7"></script>
-<script src="rsvp.js?v=7nov-7"></script>
+<script src="pad.js?v=7nov-8"></script>
+<script src="rsvp.js?v=7nov-8"></script>
 </body>
 </html>

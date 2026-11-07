@@ -1,4 +1,4 @@
-// rsvp.js · versie 7nov-5 (met contactkaartjes)
+// rsvp.js · versie 7nov-8 (contactkaartjes, slapen, antwoord bekijken en aanpassen)
 // ---------------------------------------------------------------
 // Inschrijvingen gaan naar jullie Google Form (en dus de sheet).
 // Vul hieronder de link en de veldnummers in zodra het formulier
@@ -12,8 +12,10 @@ const FIELDS = {
   volwassenen: "",
   kinderen: "",
   dieet: "",
-  camionette: "",
-  bericht: ""
+  slapen: "",
+  bericht: "",
+  soort: ""        // "nieuw" of "aanpassing", zodat je in de sheet ziet wat er veranderde
+
 };
 
 // Contactkaartjes: nummer pas hier samenstellen (minder spam van bots)
@@ -46,12 +48,55 @@ document.querySelectorAll(".contact-card").forEach((card) => {
 (function () {
   const form = document.getElementById("rsvp");
   const status = document.getElementById("rsvp-status");
+  const kaart = document.getElementById("mijn-antwoord");
   if (!form) return;
+  const SLEUTEL = "leyenjan-antwoord";
+  const VELDEN = ["naam", "komt", "volwassenen", "kinderen", "dieet", "slapen", "bericht"];
+  const LABELS = { naam: "Naam", komt: "Komen jullie?", volwassenen: "Volwassenen", kinderen: "Kinderen", dieet: "Dieetwensen", slapen: "Blijven slapen", bericht: "Berichtje" };
+
+  // kopie in de eigen browser (kan ontbreken of geblokkeerd zijn: dan gewoon zonder)
+  const lees = () => { try { return JSON.parse(localStorage.getItem(SLEUTEL) || "null"); } catch (e) { return null; } };
+  const bewaar = (v) => { try { localStorage.setItem(SLEUTEL, JSON.stringify(v)); } catch (e) {} };
+
+  function toonAntwoord(a) {
+    if (!kaart || !a) return;
+    const lijst = document.getElementById("ma-lijst");
+    lijst.innerHTML = "";
+    VELDEN.forEach((k) => {
+      const v = a.waarden[k];
+      if (v === undefined || v === "") return;
+      const dt = document.createElement("dt"); dt.textContent = LABELS[k];
+      const dd = document.createElement("dd"); dd.textContent = v;
+      lijst.append(dt, dd);
+    });
+    document.getElementById("ma-datum").textContent = new Date(a.wanneer).toLocaleDateString("nl-BE", { day: "numeric", month: "long", year: "numeric" });
+    kaart.hidden = false;
+    form.hidden = true;
+  }
+  function vulIn(a) {
+    VELDEN.forEach((k) => {
+      const v = a.waarden[k];
+      const els = form.elements[k];
+      if (!els || v === undefined) return;
+      if (els.length && els[0] && els[0].type === "radio") [...els].forEach((r) => (r.checked = r.value === v));
+      else els.value = v;
+    });
+  }
+  const eerder = lees();
+  if (eerder) toonAntwoord(eerder);
+  const knop = document.getElementById("ma-aanpassen");
+  if (knop) knop.addEventListener("click", () => {
+    const a = lees(); if (a) vulIn(a);
+    kaart.hidden = true; form.hidden = false;
+    form.querySelector("button[type=submit]").textContent = "Aanpassing versturen";
+    form.elements.naam.focus();
+  });
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     status.className = "status";
     const data = new FormData(form);
+    if (data.get("website")) return;                   // onzichtbaar veld: alleen bots vullen dit in
 
     if (!data.get("naam") || !String(data.get("naam")).trim()) {
       return fout("Vul je naam in, dan weten we wie er komt.");
@@ -63,20 +108,29 @@ document.querySelectorAll(".contact-card").forEach((card) => {
       return fout("Inschrijven kan binnenkort. Stuur ons intussen een berichtje.");
     }
 
+    const waarden = {};
+    VELDEN.forEach((k) => (waarden[k] = String(data.get(k) || "").trim()));
+    const soort = lees() ? "aanpassing" : "nieuw";
     const body = new URLSearchParams();
     for (const [key, entry] of Object.entries(FIELDS)) {
-      if (entry) body.append(entry, data.get(key) || "");
+      if (!entry) continue;
+      body.append(entry, key === "soort" ? soort : (waarden[key] || ""));
     }
 
-    const btn = form.querySelector("button");
+    const btn = form.querySelector("button[type=submit]");
     btn.disabled = true;
     status.textContent = "Even versturen…";
     try {
       await fetch(FORM_ACTION, { method: "POST", mode: "no-cors", body });
+      const a = { wanneer: Date.now(), waarden };
+      bewaar(a);
       form.reset();
-      status.textContent = data.get("komt") === "Nee"
-        ? "Jammer! Bedankt om het te laten weten."
-        : "Top, we hebben je antwoord. Tot 2 juli!";
+      toonAntwoord(a);
+      status.textContent = "";
+      const bedankt = document.createElement("p");
+      bedankt.className = "status";
+      bedankt.textContent = waarden.komt === "Nee" ? "Jammer! Bedankt om het te laten weten." : "Top, we hebben je antwoord. Tot 2 juli!";
+      kaart.prepend(bedankt);
     } catch (err) {
       fout("Versturen lukte niet. Probeer opnieuw of stuur ons een berichtje.");
     } finally {
