@@ -84,10 +84,18 @@
       <path d="M40 37l-3-5M46 32l-2-6M52 29l-1-6M58 28l0-6M64 29l2-5"/>
       <circle cx="78" cy="48" r="1.8" fill="currentColor"/><path d="M84 64q6-1 5-9"/><path d="M94 60v4"/>
       <g class="z-wieg" style="transform-origin:18px 56px"><path d="M18 56q-5 1-7-3M11 53l-2-3M11 53l-3 1"/></g></g>`,
-    borncrazy: `<g>
-      <clipPath id="z-clip-bc"><circle cx="50" cy="50" r="44"/></clipPath>
-      <image href="assets/borncrazy.jpg" x="6" y="6" width="88" height="88" clip-path="url(#z-clip-bc)" preserveAspectRatio="xMidYMid slice"/>
-      <circle cx="50" cy="50" r="44" fill="none"/></g>`,
+    borncrazy: `<g ${S}>
+      <circle cx="50" cy="50" r="44"/>
+      <g class="z-wheelie" style="transform-origin:61px 46px">
+        <g class="z-draai" style="transform-origin:61px 46px"><circle cx="61" cy="46" r="7.7"/><path d="M61 38.3v15.4M53.3 46h15.4"/></g>
+        <g class="z-draai" style="transform-origin:37px 29.2px"><circle cx="37" cy="29.2" r="7.7"/><path d="M37 21.5v15.5M29.3 29.2h15.5"/></g>
+        <path d="M61 46L50.4 41.7 62.8 31.5ZM62.8 31.5L48.2 22.3 37 29.2M48.2 22.3l1.2-5.4 2.4 1.7M47.1 40.4l6.6 2.6"/>
+        <path d="M47.1 40.4l3.8-9.9 12.8 2.7-3.3-14.9-6.6-2.5-3.8 1M60.4 18.3l-.7-2.7" stroke-width="3"/>
+        <path d="M54.8 11.2a4 4 0 1 1 5.7 4.1" stroke-width="3"/><path d="M54.8 11.2h-3.9M60.5 15.3a4 4 0 0 1-5.7-4.1"/>
+      </g>
+      <path class="z-knipper" d="M72 34h9M74 42h11M73 50h8"/>
+      <path d="M26.5 57v11M26.5 57h5.2a3.3 2.8 0 0 1 0 5.5h-5.2M31.7 62.5a3.3 2.8 0 0 1 0 5.5h-5.2M42.3 57h2.9a3.3 2.8 0 0 1 3.3 2.8v5.5a3.3 2.8 0 0 1-3.3 2.7h-2.9a3.3 2.8 0 0 1-3.3-2.7v-5.5a3.3 2.8 0 0 1 3.3-2.8ZM51.5 68V57h5.2a3.3 2.8 0 0 1 0 5.5h-5.2M55.8 62.5l5.2 5.5M64 68V57l9.5 11V57" stroke-width="3.4"/>
+      <path d="M33.3 74.4c-1.2-2.4-8.2-3.6-8.2 3.1s7 5.5 8.2 3.1M35.5 83V72H40a2.9 2.8 0 0 1 0 5.5h-4.5M39.2 77.5l4.5 5.5M45.9 83l4.1-11 4.1 11M47.5 78.7h5M56.3 72h8.2l-8.2 11h8.2M66.7 72l4.1 5.1 4.1-5.1M70.8 77.1V83" stroke-width="3.4"/></g>`,
     hantilopen: `<g ${S}>
       <path d="M12 60a38 38 0 0 1 76 0"/><path d="M14 50l-6-2M20 36l-5-4M31 25l-3-6M44 21l-1-6M56 21l1-6M69 25l3-6M80 36l5-4M86 50l6-2"/>
       <path d="M50 86c-7 0-11-7-11-15 0-11 4-21 11-25 7 4 11 14 11 25 0 8-4 15-11 15Z"/>

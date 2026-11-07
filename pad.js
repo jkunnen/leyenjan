@@ -208,11 +208,16 @@
       el("circle", { cx: 0, cy: 0, r: R, class: "st-rond" }, g);
       if (it.sticker === "dromen") {   // bergen met een opkomende zon
         el("path", { d: "M-11,6 L-4,-2 L-1,1 L4,-6 L11,5 M4,-9 a3,3 0 0 1 6,0 M7,-14 v-2 M11,-12 l1.5,-1.5 M3,-12 l-1.5,-1.5", class: "st-lijn" }, g);
-      } else {                         // Born Crazy: de echte sticker van de bende
-        const clip = el("clipPath", { id: "st-clip-bc" }, g);
-        el("circle", { cx: 0, cy: 0, r: R }, clip);
-        el("image", { href: "assets/borncrazy.jpg", x: -R, y: -R, width: 2 * R, height: 2 * R, "clip-path": "url(#st-clip-bc)", preserveAspectRatio: "xMidYMid slice" }, g);
-        el("circle", { cx: 0, cy: 0, r: R, class: "st-rand" }, g);
+      } else {                         // Born Crazy: de sticker van de bende, nagetekend in lijnen (zoals in de zijkant)
+        const s = 0.52;                // de tekening staat in 100 eenheden, zoals de zijkant-iconen
+        const k = el("g", { class: "st-bc", transform: `translate(${-50 * s},${-50 * s}) scale(${s})` }, g);
+        el("circle", { cx: 60, cy: 44, r: 7.2 }, k);                                 // achterwiel op de grond
+        el("circle", { cx: 36, cy: 31.2, r: 7.2 }, k);                               // voorwiel in de lucht: wheelie
+        el("path", { d: "M60 44L49.7 41.2 60 30.4ZM60 30.4L45.5 23.6 36 31.2M45.5 23.6l.5-5.2 2.4 1.3M46.5 40.4l6.4 1.6" }, k);   // kader, stuur, trapper
+        el("path", { d: "M46.5 40.4l2.4-9.6 12.1 1.1-4.7-13.4-6.4-1.6-3.4 1.4M56.3 18.5l-.9-2.4M50.3 12.5a3.7 3.7 0 1 1 5.8 3.2", class: "dik" }, k);   // rijder, gehurkt, en zijn helm
+        el("path", { d: "M50.3 12.5l-3.6.5M56.1 15.7a3.7 3.7 0 0 1-5.8-3.2M71 32h8M73 40h10M72 48h7" }, k);   // klep, kin en vaart
+        el("path", { d: "M24.5 55v13M24.5 55h5.8a3.7 3.3 0 0 1 0 6.5h-5.8M30.3 61.5a3.7 3.3 0 0 1 0 6.5h-5.8M41.7 55h3.1a3.7 3.3 0 0 1 3.7 3.3v6.5a3.7 3.3 0 0 1-3.7 3.2h-3.1a3.7 3.3 0 0 1-3.7-3.2v-6.5a3.7 3.3 0 0 1 3.7-3.3ZM51.5 68V55h5.8a3.7 3.3 0 0 1 0 6.5h-5.8M56.2 61.5l5.8 6.5M65 68V55l10.5 13V55", class: "letter" }, k);   // BORN
+        el("path", { d: "M31.4 74.3c-1.4-2.8-9.2-4.2-9.2 3.7s7.8 6.5 9.2 3.7M33.8 84.5v-13h5.1a3.2 3.3 0 0 1 0 6.5h-5.1M37.9 78l5.1 6.5M45.4 84.5l4.6-13 4.6 13M47.2 79.4h5.6M57 71.5h9.2L57 84.5h9.2M68.6 71.5l4.6 6 4.6-6M73.2 77.5v7", class: "letter" }, k);   // CRAZY
       }
     }
     // ballonnen voor de petekinderen (grafiet: van Jan, rood: van Leyla)
