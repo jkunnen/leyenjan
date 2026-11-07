@@ -31,6 +31,7 @@
     titel: (li.querySelector(".h-titel") || {}).textContent || "",
     tekst: (li.querySelector(".h-tekst") || {}).textContent || "",
     stil: li.classList.contains("stil"),
+    voertuig: li.dataset.voertuig || "",
     now: li.classList.contains("now")
   }));
   const n = items.length;
@@ -127,26 +128,50 @@
     vorigJaar = it.jaar;
   });
 
-  // 4. De camionette (onder de haltes, zodat labels leesbaar blijven)
+  // 4. Ons voertuig (onder de haltes). Het wisselt onderweg:
+  //    eerst een kleine auto met één fiets, dan Ivette (Iveco Daily) met twee,
+  //    daarna de Caddy Maxi met twee. Zie data-voertuig in de lijst.
   const van = el("g", { class: "p-van", "aria-hidden": "true" });
-  el("path", { d: "M-20,-2 v-15 a3,3 0 0 1 3,-3 h24 l8,9 v9 Z", class: "p-van-body" }, van);
-  el("path", { d: "M8,-18 l6.5,7.5 h-6.5 Z", class: "p-van-raam" }, van);
-  el("rect", { x: -15, y: -15, width: 7, height: 5, rx: 1, class: "p-van-raam" }, van);
-  el("rect", { x: -17, y: -24, width: 20, height: 3, rx: 1, class: "p-van-body" }, van);
-  el("circle", { cx: -12, cy: -1, r: 4.2, class: "p-van-wiel" }, van);
-  el("circle", { cx: 8, cy: -1, r: 4.2, class: "p-van-wiel" }, van);
-  // twee mountainbikes op een fietsdrager aan de trekhaak.
-  // In zijaanzicht van de camionette zie je ze van voor: smal, met het stuur dwars.
-  el("path", { d: "M-20,-3.5 h-5", class: "p-haak" }, van);                         // trekhaak
-  el("rect", { x: -33, y: -5, width: 9, height: 2.4, rx: 0.8, class: "p-drager" }, van); // drager
-  el("rect", { x: -33.4, y: -5.6, width: 1.6, height: 1.6, rx: 0.4, class: "p-licht" }, van); // achterlicht
-  const fiets = (cx, cls) => {
-    const g = el("g", { class: "p-fiets " + cls }, van);
-    el("rect", { x: cx - 1.2, y: -12.5, width: 2.4, height: 8.2, rx: 1.2, class: "p-band" }, g); // banden, van voor gezien
-    el("path", { d: `M${cx},-12.5 V-15.6 M${cx - 4.6},-16.2 Q${cx},-15 ${cx + 4.6},-16.2 M${cx - 1.6},-13.8 h3.2` }, g); // stuurpen, stuur, zadel
+  // fietsen op een drager aan de trekhaak: in zijaanzicht zie je ze van voor
+  const drager = (parent, achterkant, aantal) => {
+    const x0 = achterkant;                                   // x van de achterbumper
+    el("path", { d: `M${x0},-3.5 h-5`, class: "p-haak" }, parent);
+    const breed = aantal === 1 ? 6 : 9;
+    el("rect", { x: x0 - 5 - breed + 1, y: -5, width: breed, height: 2.4, rx: 0.8, class: "p-drager" }, parent);
+    el("rect", { x: x0 - 5 - breed + 0.6, y: -5.6, width: 1.6, height: 1.6, rx: 0.4, class: "p-licht" }, parent);
+    const fiets = (cx, cls) => {
+      const g = el("g", { class: "p-fiets " + cls }, parent);
+      el("rect", { x: cx - 1.2, y: -12.5, width: 2.4, height: 8.2, rx: 1.2, class: "p-band" }, g);
+      el("path", { d: `M${cx},-12.5 V-15.6 M${cx - 4.6},-16.2 Q${cx},-15 ${cx + 4.6},-16.2 M${cx - 1.6},-13.8 h3.2` }, g);
+    };
+    if (aantal === 1) fiets(x0 - 8, "voor");
+    else { fiets(x0 - 10.6, "achter"); fiets(x0 - 7.2, "voor"); }
   };
-  fiets(-30.6, "achter");
-  fiets(-27.2, "voor");
+  const voertuigen = {};
+  // kleine auto (zoals een Opel Corsa): hatchback, één fiets
+  voertuigen.auto = el("g", { class: "v-auto" }, van);
+  el("path", { d: "M-12,-2 v-6.5 q0,-1.5 1.2,-2.2 l2.6,-3.6 q0.8,-1 2,-1 h8.6 q1.3,0 2.1,0.9 l3.8,4.1 l4.2,1 q1.5,0.4 1.5,1.9 v5.4 Z", class: "p-van-body" }, voertuigen.auto);
+  el("path", { d: "M-8.4,-10.6 l2.2,-3 h4.4 v3 Z M-0.6,-13.6 h4.2 l2.8,3 h-7 Z", class: "p-van-raam" }, voertuigen.auto);
+  el("circle", { cx: -7, cy: -1, r: 3.3, class: "p-van-wiel" }, voertuigen.auto);
+  el("circle", { cx: 8.5, cy: -1, r: 3.3, class: "p-van-wiel" }, voertuigen.auto);
+  drager(voertuigen.auto, -12, 1);
+  // Ivette, de Iveco Daily: hoog, lang, met dakrek, twee fietsen
+  voertuigen.ivette = el("g", { class: "v-ivette" }, van);
+  el("path", { d: "M-20,-2 v-15 a3,3 0 0 1 3,-3 h24 l8,9 v9 Z", class: "p-van-body" }, voertuigen.ivette);
+  el("path", { d: "M8,-18 l6.5,7.5 h-6.5 Z", class: "p-van-raam" }, voertuigen.ivette);
+  el("rect", { x: -15, y: -15, width: 7, height: 5, rx: 1, class: "p-van-raam" }, voertuigen.ivette);
+  el("rect", { x: -17, y: -24, width: 20, height: 3, rx: 1, class: "p-van-body" }, voertuigen.ivette);
+  el("circle", { cx: -12, cy: -1, r: 4.2, class: "p-van-wiel" }, voertuigen.ivette);
+  el("circle", { cx: 8, cy: -1, r: 4.2, class: "p-van-wiel" }, voertuigen.ivette);
+  drager(voertuigen.ivette, -20, 2);
+  // de Caddy Maxi: lager en korter dan Ivette, met een korte motorkap, twee fietsen
+  voertuigen.caddy = el("g", { class: "v-caddy" }, van);
+  el("path", { d: "M-17,-2 v-11.5 a2.5,2.5 0 0 1 2.5,-2.5 h19.5 l5.2,5.6 l4.6,1.3 q1.2,0.4 1.2,1.6 v5.5 Z", class: "p-van-body" }, voertuigen.caddy);
+  el("path", { d: "M5.2,-14.4 l4.4,4.8 h-4.4 Z", class: "p-van-raam" }, voertuigen.caddy);
+  el("rect", { x: -3.5, y: -13.6, width: 7, height: 4.2, rx: 0.8, class: "p-van-raam" }, voertuigen.caddy);
+  el("circle", { cx: -10.5, cy: -1, r: 3.7, class: "p-van-wiel" }, voertuigen.caddy);
+  el("circle", { cx: 9, cy: -1, r: 3.7, class: "p-van-wiel" }, voertuigen.caddy);
+  drager(voertuigen.caddy, -17, 2);
 
   // 5. Haltes
   items.forEach((it, i) => {
@@ -206,6 +231,8 @@
     afdaling = requestAnimationFrame(loop);
   }
 
+  const wissels = items.filter((it) => it.voertuig && voertuigen[it.voertuig]).map((it) => ({ len: it.len, soort: it.voertuig }));
+
   // 6. Rijden en kiezen
   let huidig = 0, doel = 0, anim = null, actief = 0;
   const zet = (len) => {
@@ -213,6 +240,10 @@
     const b = pad.getPointAtLength(Math.max(0, Math.min(L, len + 2)));
     const hoek = Math.max(-22, Math.min(22, Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI));
     van.setAttribute("transform", `translate(${a.x.toFixed(1)},${(a.y - 2).toFixed(1)}) rotate(${hoek.toFixed(1)}) scale(1.5)`);
+    // welk voertuig rijdt hier? het laatste wissel-punt dat we gepasseerd zijn
+    let soort = wissels.length ? wissels[0].soort : "ivette";
+    for (const w of wissels) if (len >= w.len - 50) soort = w.soort;
+    for (const k in voertuigen) voertuigen[k].style.display = k === soort ? "" : "none";
   };
   const traag = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const rijNaar = (len) => {
