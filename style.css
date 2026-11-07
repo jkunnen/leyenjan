@@ -83,23 +83,69 @@ p { margin: 0 0 1em; max-width: 62ch; }
 .aside { font: 400 1.05rem/1.3 var(--display); color: var(--staal-donker); }
 .lead { font-size: 1.15rem; }
 
-/* tijdlijn: een trail van stippen langs de linkerkant */
-.timeline { list-style: none; margin: 0 0 28px; padding: 0; display: grid; gap: 22px; position: relative; }
-.timeline::before { content: ""; position: absolute; left: 7px; top: 10px; bottom: 10px; border-left: 3px dotted var(--staal); }
-.timeline li { position: relative; padding-left: 36px; display: grid; gap: 2px; }
-.timeline li::before { content: ""; position: absolute; left: 0; top: 4px; width: 17px; height: 17px; border-radius: 50%; background: var(--wit); border: 3px solid var(--grafiet); }
-.t-date { font: 600 clamp(1.2rem, 3.4vw, 1.5rem)/1.1 var(--display); font-variant-numeric: tabular-nums; }
-.t-what { color: var(--grafiet); }
-.timeline li.now::before { background: var(--stempelrood); border-color: var(--stempelrood); }
-.timeline li.now .t-date { color: var(--stempelrood); }
+/* ons pad: hoogteprofiel met camionette */
+.pad { margin: 8px 0 28px; }
+.pad-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-inline: -4px; padding-inline: 4px; }
+.pad-svg { display: block; width: 100%; min-width: 720px; height: auto; overflow: visible; }
+.pad-hint { margin: 6px 0 0; font: 400 0.95rem/1.3 var(--display); color: var(--staal-donker); }
+.hint-gsm { display: none; }
+@media (max-width: 760px) { .hint-gsm { display: inline; } .hint-pc { display: none; } }
+@media (max-width: 520px) { .haltes { grid-template-columns: 1fr; } }
+.p-raster { stroke: var(--staal-licht); stroke-width: 1; stroke-dasharray: 2 6; }
+.p-as { font: 400 13px var(--display); fill: var(--staal); }
+.p-grond { fill: var(--staal-mist); }
+.p-pad { fill: none; stroke: var(--grafiet); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 0 10; }
+.p-jaar { font: 500 14px var(--display); fill: var(--staal-donker); }
+.p-trail { fill: none; stroke: var(--staal); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 0 6; }
+.p-toekomst { fill: none; stroke: var(--staal); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 0 10; }
+.p-stip { fill: var(--staal-mist); stroke: var(--staal-donker); stroke-width: 2; }
+.p-halte { cursor: pointer; outline: none; }
+.p-halte .p-raak { fill: transparent; stroke: none; }
+.p-halte .p-punt { fill: var(--wit); stroke: var(--grafiet); stroke-width: 3; }
+.p-halte:hover .p-punt, .p-halte.actief .p-punt { fill: var(--grafiet); }
+.p-halte:focus-visible .p-punt { stroke: var(--stempelrood); stroke-width: 4; }
+.p-halte.stil .p-punt { fill: var(--staal-mist); stroke: var(--staal-donker); stroke-width: 2; stroke-dasharray: 3 3; }
+.p-halte.stil.actief .p-punt { fill: var(--staal-donker); }
+.p-halte.now .p-punt { fill: var(--stempelrood); stroke: var(--stempelrood); }
+
+/* het verhaal van de gekozen halte */
+.pad-kaart { display: grid; grid-template-columns: auto 1fr auto; gap: 16px; align-items: center; margin-top: 14px; padding: 18px; border-top: 3px solid var(--grafiet); background: var(--staal-mist); }
+.pad-kaart.now { border-color: var(--stempelrood); }
+.pad-kaart.stil { border-top-style: dashed; border-color: var(--staal-donker); }
+.pad-tekst { display: grid; gap: 2px; min-width: 0; }
+.pad-kaart .h-titel { font: 600 1.35rem/1.2 var(--display); }
+.pad-kaart.now .h-titel { color: var(--stempelrood); }
+.h-voetnoot { margin-top: 4px; font: 400 0.95rem/1.2 var(--display); color: var(--staal-donker); }
+.pad-nav { font: 600 1.4rem/1 var(--display); width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid var(--grafiet); background: var(--wit); color: var(--grafiet); cursor: pointer; }
+.pad-nav:disabled { opacity: .3; cursor: default; }
+.p-paal { stroke: var(--grafiet); stroke-width: 2; }
+.p-vlag { fill: var(--stempelrood); }
+.p-van { pointer-events: none; }
+.p-van-body { fill: var(--staal-donker); }
+.haltes[hidden] { display: none; }
+.p-van-raam { fill: var(--staal-mist); }
+.p-haak { stroke: var(--grafiet); stroke-width: 1.4; stroke-linecap: round; }
+.p-drager { fill: var(--grafiet); }
+.p-licht { fill: var(--stempelrood); }
+.p-fiets path { fill: none; stroke: var(--grafiet); stroke-width: 1.2; stroke-linecap: round; }
+.p-fiets .p-band { fill: var(--grafiet); }
+.p-fiets.achter path { stroke: var(--staal); }
+.p-fiets.achter .p-band { fill: var(--staal); }
+.p-van-wiel { fill: var(--grafiet); stroke: var(--wit); stroke-width: 1.5; }
+
+/* de haltes als kaartjes */
+.haltes { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr)); gap: 12px; }
+.haltes li { position: relative; display: grid; gap: 4px; align-content: start; padding: 16px 16px 18px; border-top: 3px solid var(--staal-licht); background: var(--wit); cursor: default; min-width: 0; transition: border-color .2s, background .2s; }
+.haltes li.actief { border-color: var(--grafiet); background: var(--staal-mist); }
+.haltes li.now { border-color: var(--stempelrood); }
+.h-nr { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--grafiet); font: 600 13px/1 var(--display); margin-bottom: 4px; }
+.haltes li.now .h-nr { background: var(--stempelrood); border-color: var(--stempelrood); color: var(--wit); }
+.h-datum { font: 500 0.95rem/1.2 var(--display); color: var(--staal-donker); font-variant-numeric: tabular-nums; }
+.h-titel { font: 600 1.25rem/1.2 var(--display); }
+.haltes li.now .h-titel { color: var(--stempelrood); }
+.h-tekst { font-size: 0.98rem; }
 
 .section.tinted { background: var(--staal-mist); }
-
-/* foto: breed, rechte hoeken zoals gesneden staal */
-.photo { max-width: 980px; margin: 0 auto clamp(32px, 5vw, 56px); }
-.photo img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; }
-.photo figcaption { margin-top: 10px; font: 400 0.95rem/1.2 var(--display); color: var(--staal-donker); }
-@media (min-width: 900px) { .photo img { aspect-ratio: 16 / 9; object-position: 50% 62%; } }
 
 /* contact */
 .contact { margin-top: 40px; padding-top: 24px; border-top: 2px solid var(--grafiet); }
