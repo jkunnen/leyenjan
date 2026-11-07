@@ -33,14 +33,24 @@
     stil: li.classList.contains("stil"),
     voertuig: li.dataset.voertuig || "",
     trails: li.dataset.trails || "",
-    now: li.classList.contains("now")
+    now: li.classList.contains("now"),
+    // punt = geen halte met tekst, alleen iets in de animatie (een berg, vrienden, een ballon, ...)
+    punt: li.classList.contains("punt"),
+    berg: li.dataset.berg || "",
+    konvooi: (li.dataset.konvooi || "").split(",").filter(Boolean),
+    wedstrijd: li.dataset.wedstrijd !== undefined,
+    ballon: (li.dataset.ballon || "").split(",").filter(Boolean),
+    varen: li.dataset.varen !== undefined,
+    inkt: li.dataset.inkt || ""
   }));
+  const haltes = items.filter((it) => !it.punt);
   const n = items.length;
   if (n < 2) return;
 
   // 2. Terrein: haltes op gelijke afstand, met zachte heuveltjes ertussen.
   //    Na de laatste halte loopt het pad nog anderhalve stap verder omhoog.
-  const stap = (X1 - X0) / (n - 1 + 2.2);
+  const gewicht = (it) => (it.punt ? 0.6 : 1);   // een punt neemt minder plaats in dan een halte
+  const stap = (X1 - X0) / (items.slice(1).reduce((s, it) => s + gewicht(it), 0) + 2.2);
   let seed = 11;
   const rnd = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280 - 0.5; };
   const pts = [[X0 - 20, y(items[0].hoogte - 0.4)]];
@@ -55,7 +65,8 @@
     it.x = xi; it.y = y(it.hoogte);
     pts.push([it.x, it.y]);
     if (it.daarna !== null) { xi += stap * 0.45; pts.push([xi, y(it.daarna)]); it.x2 = xi; it.y2 = y(it.daarna); }
-    xi += stap;
+    const volgende = items[i + 1];
+    xi += stap * (volgende ? gewicht(volgende) : 1);
   });
   const laatste = items[n - 1];
   const verder = [[laatste.x + stap * 0.6, y(laatste.hoogte + 0.12)], [laatste.x + stap * 1.2, y(laatste.hoogte + 0.32)], [laatste.x + stap * 1.7, y(laatste.hoogte + 0.42)], [X1 + 15, y(laatste.hoogte + 0.5)]];
@@ -139,9 +150,57 @@
     return lo;
   };
 
+  items.forEach((it) => (it.len = lengteBijX(it.x)));
+  const opPad = (x) => pad.getPointAtLength(lengteBijX(x));
+
+  // ---- versiering in de animatie, zonder tekst: wie het weet, herkent het ----
+  items.forEach((it) => {
+    const p = opPad(it.x);
+    // een hoge berg met sneeuw, een vlag en twee klimmers op de top
+    if (it.berg) {
+      const top = y(4.55), voet = H;
+      const g = el("g", { class: "p-berg" });
+      svg.insertBefore(g, svg.querySelector(".p-grond"));   // achter de grond: de voet verdwijnt erin
+      el("path", { d: `M${p.x - 70},${voet} L${p.x - 8},${top + 12} L${p.x},${top} L${p.x + 9},${top + 14} L${p.x + 68},${voet} Z`, class: "b-rots" }, g);
+      el("path", { d: `M${p.x - 12},${top + 17} L${p.x},${top} L${p.x + 12},${top + 18} L${p.x + 6},${top + 15} L${p.x + 1},${top + 20} L${p.x - 5},${top + 15} Z`, class: "b-sneeuw" }, g);
+      el("path", { d: `M${p.x},${top} v-13 l9,3.5 l-9,3.5`, class: "b-vlag" }, g);
+      [[-7, 9], [-12, 14]].forEach(([dx, dy]) => {   // twee klimmers, vlak onder de top
+        const k = el("g", { class: "b-klimmer", transform: `translate(${p.x + dx},${top + dy})` }, g);
+        el("circle", { cx: 0, cy: -6, r: 1.6 }, k);
+        el("path", { d: "M0,-4.4 L-0.6,0 M-0.6,0 L-2.2,3 M-0.6,0 L1.4,2.8 M0,-3.6 L2.6,-5.4 M2.6,-5.4 L3.4,-1" }, k);
+      });
+    }
+    // een wedstrijd: een startboog met dambordvlag over het pad
+    if (it.wedstrijd) {
+      const g = el("g", { class: "p-wedstrijd" });
+      svg.insertBefore(g, pad.nextSibling);
+      el("path", { d: `M${p.x - 13},${p.y + 2} V${p.y - 30} M${p.x + 13},${p.y + 2} V${p.y - 30}`, class: "w-paal" }, g);
+      for (let r = 0; r < 2; r++) for (let c = 0; c < 9; c++)
+        el("rect", { x: p.x - 13 + c * (26 / 9), y: p.y - 33 + r * 3, width: 26 / 9, height: 3, class: (r + c) % 2 ? "w-zwart" : "w-wit" }, g);
+    }
+    // ballonnen voor de petekinderen (grafiet: van Jan, rood: van Leyla)
+    it.ballon.forEach((wie, k) => {
+      const bx = p.x + (k - (it.ballon.length - 1) / 2) * 13, by = p.y - 40 - (k % 2) * 7;
+      const g = el("g", { class: "p-ballon " + wie, style: `animation-delay:${(k * 0.7).toFixed(1)}s` });
+      el("path", { d: `M${bx},${by + 8} q-3,8 1,13 q3,5 -1,11`, class: "bl-touw" }, g);
+      el("ellipse", { cx: bx, cy: by, rx: 6, ry: 7.5, class: "bl-ballon" }, g);
+      el("path", { d: `M${bx - 1.6},${by + 7.2} h3.2 l-1.6,2.2 Z`, class: "bl-knoop" }, g);
+    });
+    // een varentak zoals de tatoeage, geplant naast het pad
+    if (it.varen) {
+      const g = el("g", { class: "p-varen", transform: `translate(${p.x + 4},${p.y + 2}) rotate(-58)` });
+      el("path", { d: "M0,0 C8,-2 18,-3 30,-1" }, g);
+      for (let k = 0; k < 6; k++) {
+        const sx = 6 + k * 4.4, l = 6 - k * 0.6;
+        el("path", { d: `M${sx},-1.5 l${l * 0.5},-${l} M${sx},-1 l${l * 0.5},${l * 0.9} M${sx + l * 0.25},-${l * 0.5} l-1.4,-1 M${sx + l * 0.25},${l * 0.45} l-1.4,1` }, g);
+      }
+    }
+  });
+
   // jaartallen onder het pad (alleen als het jaar verandert)
   let vorigJaar = "";
   items.forEach((it) => {
+    if (it.punt) return;
     if (it.jaar && it.jaar !== vorigJaar) el("text", { x: it.x, y: H - 10, "text-anchor": "middle", class: "p-jaar" }).textContent = it.jaar;
     vorigJaar = it.jaar;
   });
@@ -192,21 +251,24 @@
   drager(voertuigen.caddy, -17, 2);
 
   // 5. Haltes
-  items.forEach((it, i) => {
-    it.len = lengteBijX(it.x);
-    const g = el("g", { class: "p-halte" + (it.stil ? " stil" : "") + (it.now ? " now" : ""), tabindex: "0", role: "button", "aria-label": `${i + 1}. ${it.titel}` });
+  haltes.forEach((it, i) => {
+    const g = el("g", { class: "p-halte" + (it.stil ? " stil" : "") + (it.now ? " now" : "") + (it.inkt ? " inkt-" + it.inkt : ""), tabindex: "0", role: "button", "aria-label": `${i + 1}. ${it.titel}` });
     if (it.now) {
       el("line", { x1: it.x, x2: it.x, y1: it.y - 13, y2: it.y - 46, class: "p-paal" }, g);
       el("path", { d: `M${it.x},${it.y - 46} l22,7 l-22,7 Z`, class: "p-vlag" }, g);
     }
     el("circle", { cx: it.x, cy: it.y, r: 16, class: "p-raak" }, g); // groter tikvlak
     el("circle", { cx: it.x, cy: it.y, r: it.stil ? 7 : 10, class: "p-punt" }, g);
+    // een klein teken in inkt bij een afscheid met een tatoeage
+    if (it.inkt === "h") el("path", { d: `M${it.x - 2.4},${it.y - 3.4} v6.8 M${it.x + 2.4},${it.y - 3.4} v6.8 M${it.x - 2.4},${it.y + 0.3} h4.8`, class: "p-inkt" }, g);
+    if (it.inkt === "quoi") el("path", { d: `M${it.x - 2.2},${it.y - 2.2} a2.3,2.3 0 1 1 3.4,2 q-1.2,0.7 -1.2,1.8 M${it.x},${it.y + 3.6} v0.1`, class: "p-inkt" }, g);
+    if (it.inkt === "hibiscus") for (let k = 0; k < 5; k++) { const a = k * 72 * Math.PI / 180; el("circle", { cx: it.x + Math.cos(a) * 2.6, cy: it.y + Math.sin(a) * 2.6, r: 1.6, class: "p-inkt-blad" }, g); }
     if (it.x2) el("circle", { cx: it.x2, cy: it.y2, r: 5, class: "p-stip" }, svg);
     it.g = g;
     g.addEventListener("click", () => kies(i));
     g.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); kies(i); } });
   });
-  svg.insertBefore(van, items[0].g);
+  svg.insertBefore(van, haltes[0].g);
 
   // 5b. Twee mountainbikers (Leyla en Jan) die samen een trail afrijden
   const maakRijder = (cls) => {
@@ -261,6 +323,38 @@
 
   const wissels = items.filter((it) => it.voertuig && voertuigen[it.voertuig]).map((it) => ({ len: it.len, soort: it.voertuig }));
 
+  // Vrienden die een stuk meereizen: hun voertuig rijdt achter het onze.
+  // Op een punt geldt het tot aan de volgende halte, op een halte rond die halte.
+  const maakVriend = (soort) => {
+    const g = el("g", { class: "p-vriend", "aria-hidden": "true" });
+    if (soort === "daktent") {   // auto met een daktent
+      el("path", { d: "M-12,-2 v-6 q0,-1.4 1.2,-2 l2.6,-3.4 q0.8,-1 2,-1 h8.6 q1.3,0 2.1,0.9 l3.8,4 l4.2,1 q1.5,0.4 1.5,1.9 v4.6 Z", class: "vr-body" }, g);
+      el("path", { d: "M-9,-14.6 h14 l-3,-5.6 h-8 Z", class: "vr-tent" }, g);
+      el("circle", { cx: -7, cy: -1, r: 3.2, class: "vr-wiel" }, g); el("circle", { cx: 8.5, cy: -1, r: 3.2, class: "vr-wiel" }, g);
+    } else {                     // een camionette van vrienden
+      el("path", { d: "M-18,-2 v-13.5 a2.5,2.5 0 0 1 2.5,-2.5 h21 l7,8 v8 Z", class: "vr-body" }, g);
+      el("path", { d: "M5.5,-16.4 l5.6,6.4 h-5.6 Z", class: "vr-raam" }, g);
+      el("circle", { cx: -11, cy: -1, r: 3.8, class: "vr-wiel" }, g); el("circle", { cx: 6.5, cy: -1, r: 3.8, class: "vr-wiel" }, g);
+    }
+    g.style.display = "none";
+    svg.insertBefore(g, van);
+    return g;
+  };
+  const vensters = [];
+  items.forEach((it, i) => {
+    if (!it.konvooi.length) return;
+    const volgendeHalte = items.slice(i + 1).find((o) => !o.punt);
+    const van0 = it.punt ? it.len - 30 : it.len - 70;
+    const tot = it.punt ? (volgendeHalte ? volgendeHalte.len + 5 : it.len + 60) : it.len + 25;
+    vensters.push({ van: van0, tot, wagens: it.konvooi.map(maakVriend) });
+  });
+  const plaatsOp = (g, len) => {
+    const a = pad.getPointAtLength(Math.max(0, Math.min(L, len)));
+    const b = pad.getPointAtLength(Math.max(0, Math.min(L, len + 2)));
+    const hoek = Math.max(-22, Math.min(22, Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI));
+    g.setAttribute("transform", `translate(${a.x.toFixed(1)},${(a.y - 2).toFixed(1)}) rotate(${hoek.toFixed(1)}) scale(1.35)`);
+  };
+
   // 6. Rijden en kiezen
   let huidig = 0, doel = 0, anim = null, actief = 0;
   const zet = (len) => {
@@ -272,6 +366,14 @@
     let soort = wissels.length ? wissels[0].soort : "ivette";
     for (const w of wissels) if (len >= w.len - 50) soort = w.soort;
     for (const k in voertuigen) voertuigen[k].style.display = k === soort ? "" : "none";
+    // vrienden in het konvooi, achter ons
+    vensters.forEach((v) => {
+      const aan = len >= v.van && len <= v.tot;
+      v.wagens.forEach((g, k) => {
+        g.style.display = aan ? "" : "none";
+        if (aan) plaatsOp(g, len - 62 - k * 44);
+      });
+    });
   };
   const traag = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const rijNaar = (len) => {
@@ -290,23 +392,24 @@
   const voetnoot = document.createElement("span");
   voetnoot.className = "h-voetnoot"; voetnoot.hidden = true;
   kaart.querySelector(".pad-tekst").appendChild(voetnoot);
+  const nh = haltes.length;
   function kies(i) {
-    actief = i; const it = items[i];
-    items.forEach((o, k) => o.g.classList.toggle("actief", k === i));
+    actief = i; const it = haltes[i];
+    haltes.forEach((o, k) => o.g.classList.toggle("actief", k === i));
     kaart.classList.toggle("now", it.now); kaart.classList.toggle("stil", it.stil);
     kaart.querySelector(".h-datum").textContent = it.datum;
     kaart.querySelector(".h-titel").textContent = it.titel;
     kaart.querySelector(".h-tekst").textContent = it.tekst;
-    voetnoot.hidden = !it.stil;
-    vorige.disabled = i === 0; volgende.disabled = i === n - 1;
+    voetnoot.hidden = !it.inkt;   // alleen bij een afscheid dat in inkt staat
+    vorige.disabled = i === 0; volgende.disabled = i === nh - 1;
     rijNaar(Math.max(0, it.len - 42)); // parkeer net voor de halte, zodat je ze blijft zien
   }
   vorige.addEventListener("click", () => actief > 0 && kies(actief - 1));
-  volgende.addEventListener("click", () => actief < n - 1 && kies(actief + 1));
+  volgende.addEventListener("click", () => actief < nh - 1 && kies(actief + 1));
 
   // teksten in de juiste taal zetten (bij het laden en bij elke taalwissel)
   function vertaal() {
-    items.forEach((it, i) => {
+    haltes.forEach((it, i) => {
       it.datum = (it.li.querySelector(".h-datum") || {}).textContent || "";
       it.titel = (it.li.querySelector(".h-titel") || {}).textContent || "";
       it.tekst = (it.li.querySelector(".h-tekst") || {}).textContent || "";
