@@ -41,7 +41,8 @@
     wedstrijd: li.dataset.wedstrijd !== undefined,
     ballon: (li.dataset.ballon || "").split(",").filter(Boolean),
     varen: li.dataset.varen !== undefined,
-    inkt: li.dataset.inkt || ""
+    inkt: li.dataset.inkt || "",
+    sticker: li.dataset.sticker || ""
   }));
   const haltes = items.filter((it) => !it.punt);
   const n = items.length;
@@ -137,6 +138,25 @@
       kant = -kant;
     });
   }
+  // wedstrijden: een lange trail vanaf de startboog, met een heel peloton
+  const wedstrijdTrails = [];
+  items.forEach((it) => {
+    if (!it.wedstrijd) return;
+    let tx = it.x + 6, ty = it.y + 12;
+    const tpts = [[tx, ty]], bodem = H - 40;
+    for (let k = 0; k < 12 && ty + 12 < bodem; k++) { tx += (k % 2 ? -26 : 30); ty += 10; tpts.push([tx, ty]); }
+    let d = `M${tpts[0][0].toFixed(1)},${tpts[0][1].toFixed(1)}`;
+    for (let k = 1; k < tpts.length - 1; k++) {
+      const m = [(tpts[k][0] + tpts[k + 1][0]) / 2, (tpts[k][1] + tpts[k + 1][1]) / 2];
+      d += ` Q${tpts[k][0].toFixed(1)},${tpts[k][1].toFixed(1)} ${m[0].toFixed(1)},${m[1].toFixed(1)}`;
+    }
+    const lp = tpts[tpts.length - 1]; d += ` L${lp[0].toFixed(1)},${lp[1].toFixed(1)}`;
+    const tg = el("g", { class: "p-trailgroep wedstrijd", tabindex: "0", role: "button" });
+    tg.dataset.soort = "wedstrijd";
+    el("path", { d, class: "p-trail-raak" }, tg);
+    const tp = el("path", { d, class: "p-trail" }, tg);
+    wedstrijdTrails.push({ it, tg, tp });
+  });
   const pad = el("path", { d: dVerleden, class: "p-pad" });
   el("path", { d: dToekomst, class: "p-toekomst" });
   const eind = alles[alles.length - 1];
@@ -172,11 +192,27 @@
     }
     // een wedstrijd: een startboog met dambordvlag over het pad
     if (it.wedstrijd) {
-      const g = el("g", { class: "p-wedstrijd" });
+      const g = el("g", { class: "p-wedstrijd", tabindex: "0", role: "button" });
+      it.boog = g;
       svg.insertBefore(g, pad.nextSibling);
+      el("rect", { x: p.x - 16, y: p.y - 36, width: 32, height: 40, class: "w-raak" }, g);   // tikvlak
       el("path", { d: `M${p.x - 13},${p.y + 2} V${p.y - 30} M${p.x + 13},${p.y + 2} V${p.y - 30}`, class: "w-paal" }, g);
       for (let r = 0; r < 2; r++) for (let c = 0; c < 9; c++)
         el("rect", { x: p.x - 13 + c * (26 / 9), y: p.y - 33 + r * 3, width: 26 / 9, height: 3, class: (r + c) % 2 ? "w-zwart" : "w-wit" }, g);
+    }
+    // een sticker, zoals op de laptop: een ronde badge in de grond onder het pad
+    if (it.sticker) {
+      const sx = p.x + 6, sy = Math.min(H - 36, p.y + 46);
+      const g = el("g", { class: "p-sticker", transform: `translate(${sx},${sy}) rotate(${it.sticker === "dromen" ? 8 : -10})` });
+      el("circle", { cx: 0, cy: 0, r: 15, class: "st-rond" }, g);
+      if (it.sticker === "dromen") {   // bergen met een opkomende zon
+        el("path", { d: "M-11,6 L-4,-2 L-1,1 L4,-6 L11,5 M4,-9 a3,3 0 0 1 6,0 M7,-14 v-2 M11,-12 l1.5,-1.5 M3,-12 l-1.5,-1.5", class: "st-lijn" }, g);
+      } else {                         // een fiets die een wheelie maakt, met snelheidsstreepjes
+        const f = el("g", { transform: "rotate(-18 4 4)" }, g);
+        el("circle", { cx: -5, cy: 4, r: 4, class: "st-lijn" }, f); el("circle", { cx: 7, cy: 4, r: 4, class: "st-lijn" }, f);
+        el("path", { d: "M-5,4 h6 l-2,-6 Z M1,4 l5,-7 h-8 M6,-3 l1,7 M6,-3 l-0.6,-2.4 h2.4", class: "st-lijn" }, f);
+        el("path", { d: "M-13,-2 h4 M-14,2 h4 M-13,6 h3", class: "st-lijn" }, g);
+      }
     }
     // ballonnen voor de petekinderen (grafiet: van Jan, rood: van Leyla)
     it.ballon.forEach((wie, k) => {
@@ -281,19 +317,26 @@
     g.style.opacity = 0;
     return g;
   };
-  let rijders = null, afdaling = null;
+  let rijders = null, anderen = null, afdaling = null;
   function afdalen(trail, soort, snelheid) {
     if (!rijders) rijders = { jan: maakRijder("jan"), leyla: maakRijder("leyla") };
+    if (!anderen) anderen = Array.from({ length: 7 }, () => maakRijder("ander"));
     if (afdaling) cancelAnimationFrame(afdaling);
     // wie rijdt er mee? klim en solo: Jan alleen. samen: om beurten Leyla of Jan voorop
     let ploeg;
     if (soort === "samen") {
       window.__leylaVoorop = !window.__leylaVoorop;
       ploeg = window.__leylaVoorop ? [rijders.leyla, rijders.jan] : [rijders.jan, rijders.leyla];
+    } else if (soort === "wedstrijd") {
+      // een heel peloton, met Leyla en Jan ergens tussenin (telkens op een andere plek)
+      ploeg = anderen.slice();
+      const plek = (n) => Math.floor(Math.random() * (n + 1));
+      ploeg.splice(plek(ploeg.length), 0, rijders.jan);
+      ploeg.splice(plek(ploeg.length), 0, rijders.leyla);
     } else ploeg = [rijders.jan];
-    Object.values(rijders).forEach((r) => { r.style.transition = ""; r.style.opacity = 0; });
+    Object.values(rijders).concat(anderen).forEach((r) => { r.style.transition = ""; r.style.opacity = 0; });
     ploeg.forEach((r) => svg.appendChild(r));                   // bovenaan tekenen
-    const len = trail.getTotalLength(), afstand = 22;
+    const len = trail.getTotalLength(), afstand = soort === "wedstrijd" ? 15 : 22;
     const bergop = soort === "klim";
     const duur = Math.max(900, (len + afstand) / (snelheid || 0.6) * 10);  // snelheid in px per 10 ms
     const plaats = (r, l) => {
@@ -320,6 +363,15 @@
     ploeg.forEach((r, k) => plaats(r, -k * afstand));
     afdaling = requestAnimationFrame(loop);
   }
+
+  wedstrijdTrails.forEach(({ it, tg, tp }) => {
+    const start = () => afdalen(tp, "wedstrijd", 0.75);
+    [tg, it.boog].forEach((n) => {
+      if (!n) return;
+      n.addEventListener("click", start);
+      n.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); start(); } });
+    });
+  });
 
   const wissels = items.filter((it) => it.voertuig && voertuigen[it.voertuig]).map((it) => ({ len: it.len, soort: it.voertuig }));
 
@@ -392,6 +444,15 @@
   const voetnoot = document.createElement("span");
   voetnoot.className = "h-voetnoot"; voetnoot.hidden = true;
   kaart.querySelector(".pad-tekst").appendChild(voetnoot);
+  // het teken in inkt als labeltje in het kaartje
+  const INKT = {
+    hibiscus: '<svg viewBox="-8 -8 16 16" aria-hidden="true"><circle cx="0" cy="-3.6" r="2.4"/><circle cx="3.4" cy="-1.1" r="2.4"/><circle cx="2.1" cy="2.9" r="2.4"/><circle cx="-2.1" cy="2.9" r="2.4"/><circle cx="-3.4" cy="-1.1" r="2.4"/><circle cx="0" cy="0" r="1.2" class="hart"/></svg><span>hibiscus</span>',
+    quoi: '<span class="woord">Quoi?</span>',
+    h: '<span class="woord">H</span>'
+  };
+  const inktLabel = document.createElement("span");
+  inktLabel.className = "inkt-label"; inktLabel.hidden = true;
+  kaart.querySelector(".pad-tekst").appendChild(inktLabel);
   const nh = haltes.length;
   function kies(i) {
     actief = i; const it = haltes[i];
@@ -401,6 +462,8 @@
     kaart.querySelector(".h-titel").textContent = it.titel;
     kaart.querySelector(".h-tekst").textContent = it.tekst;
     voetnoot.hidden = !it.inkt;   // alleen bij een afscheid dat in inkt staat
+    inktLabel.hidden = !it.inkt;
+    if (it.inkt) inktLabel.innerHTML = INKT[it.inkt] || "";
     vorige.disabled = i === 0; volgende.disabled = i === nh - 1;
     rijNaar(Math.max(0, it.len - 42)); // parkeer net voor de halte, zodat je ze blijft zien
   }

@@ -1,4 +1,4 @@
-/* Stalen huwelijk · huisstijl · versie 7nov-18 (met Ons pad)
+/* Stalen huwelijk · huisstijl · versie 7nov-19 (met Ons pad)
    Staal en wit, Fredoka voor titels, Nunito voor tekst, stempelrood als enige knipoog. */
 :root {
   --wit: #ffffff;
@@ -356,3 +356,19 @@ h3.sub { font: 600 1.35rem/1.2 var(--display); margin: 0 0 14px; }
 /* de kleine lettertjes: de voetnoot bij "this time for real!*" */
 .voorbehoud { display: block; margin-top: 8px; max-width: 15em; font: 400 .78em/1.3 var(--display); letter-spacing: .01em; opacity: .85; }
 @media (max-width: 640px) { .voorbehoud { max-width: 11em; } }
+
+/* stickers in de grond */
+.p-sticker .st-rond { fill: var(--grafiet); }
+.p-sticker .st-lijn { fill: none; stroke: var(--wit); stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
+/* andere rijders in een wedstrijd */
+.p-rijder.ander .r-wiel, .p-rijder.ander .r-kader, .p-rijder.ander .r-lijf { stroke: var(--staal); }
+.p-rijder.ander .r-hoofd { fill: var(--staal); }
+.p-wedstrijd { cursor: pointer; outline: none; }
+.w-raak { fill: transparent; pointer-events: all; }
+.p-wedstrijd:focus-visible .w-paal { stroke: var(--stempelrood); }
+/* labeltje met het teken in inkt */
+.inkt-label { display: inline-flex; align-items: center; gap: 6px; justify-self: start; margin-top: 8px; padding: 4px 10px; border: 1.5px solid var(--staal-donker); border-radius: 999px; font: 500 .9rem/1 var(--display); color: var(--staal-donker); }
+.inkt-label[hidden] { display: none; }
+.inkt-label svg { width: 16px; height: 16px; fill: var(--staal-donker); }
+.inkt-label svg .hart { fill: var(--staal-mist); }
+.inkt-label .woord { font-weight: 600; letter-spacing: .02em; }
