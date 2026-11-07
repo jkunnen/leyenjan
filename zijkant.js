@@ -53,8 +53,10 @@
       <path d="M84 30l1.8 4.2 4.6.4-3.5 3 1 4.4-3.9-2.4-3.9 2.4 1-4.4-3.5-3 4.6-.4Z"/>
       <circle cx="78" cy="58" r="1.5" fill="currentColor"/><circle cx="84" cy="64" r="1.5" fill="currentColor"/><circle cx="80" cy="70" r="1.5" fill="currentColor"/></g>`,
     kimono: `<g ${S}>
-      <path d="M30 20l20 14 20-14 14 9-7 17-9-4v42H32V42l-9 4-7-17Z"/><path d="M30 20l20 32 20-32"/><path d="M32 62h36"/>
-      <g class="z-wieg" style="transform-origin:50px 62px"><path d="M48 62l-7 16M52 62l7 16"/></g></g>`,
+      <path d="M34 16L18 22 6 44l15 7 7-12v47h44V39l7 12 15-7-12-22-16-6"/>
+      <path d="M34 16q16 8 32 0"/><path d="M34 16l24 46M43 15l20 38"/><path d="M66 16L50 46"/>
+      <path d="M28 59h44v8H28Z" fill="currentColor"/><path d="M45 56h10v14H45Z" fill="currentColor"/>
+      <g class="z-wieg" style="transform-origin:50px 68px"><path d="M47 70l-7 17M53 70l8 16" stroke-width="4"/></g></g>`,
     ballet: `<g ${S} class="z-wieg" style="transform-origin:50px 92px">
       <circle cx="50" cy="18" r="6"/><path d="M50 24v26"/>
       <path d="M50 30c-10-6-20-6-24 2M50 30c10-6 20-6 24 2"/>
@@ -65,8 +67,10 @@
       <g class="z-wieg" style="transform-origin:30px 36px"><path d="M27 36l-8-12M31 34v-15M35 36l7-12"/></g>
       <circle cx="72" cy="64" r="15"/><path d="M72 49v-7"/><path d="M72 45q8-7 13-1q-6 5-13 1Z"/></g>`,
     gember: `<g ${S}>
-      <path d="M20 82C14 60 17 34 29 27c10-5 15 10 21 24 6-14 11-29 21-24 12 7 15 33 9 55-6 4-10-2-13-11-4 7-10 9-16 2-6 7-12 5-16-2-3 9-9 15-15 11Z"/>
-      <path d="M26 46q4 3 8 0M66 44q4 3 8 0M44 66q3 2 6 0M58 64q3 2 6 0"/><circle cx="30" cy="30" r="2.5"/><circle cx="72" cy="30" r="2.5"/></g>`,
+      <path d="M16 84Q13 71 17 58Q14 45 19 34Q21 24 29 24Q37 24 38 32L50 48L62 32Q63 24 71 24Q79 24 81 34Q86 45 83 58Q87 71 84 84Q78 90 72 84Q75 71 71 58L70 48L54 68Q50 73 46 68L30 48L29 58Q25 71 28 84Q22 90 16 84Z"/>
+      <path d="M17 58q6 3 12 0M19 40q6 3 12 1M71 58q6 3 12 0M70 41q6 2 12 0M36 54l8-9M64 54l-8-9M22 74q3 1 6 0M74 74q3 1 6 0"/>
+      <g class="z-wieg" style="transform-origin:29px 24px"><path d="M29 24q-3-9 2-15"/><path d="M31 11q6-2 8 3q-5 3-8-3Z"/></g>
+      <g class="z-wieg" style="transform-origin:71px 24px"><path d="M71 24q3-9-2-15"/><path d="M69 11q-6-2-8 3q5 3 8-3Z"/></g></g>`,
     hamsa: `<g ${S}>
       <path d="M50 88c-18 0-28-12-28-26 0-7 2-11 6-11V32a4 4 0 0 1 8 0v18V24a4 4 0 0 1 8 0v26V22a4 4 0 0 1 8 0v28V24a4 4 0 0 1 8 0v26V32a4 4 0 0 1 8 0v19c4 0 6 4 6 11 0 14-10 26-28 26Z"/>
       <path d="M38 68q12-10 24 0q-12 10-24 0Z"/><circle class="z-knipper" cx="50" cy="68" r="2.6" fill="currentColor"/></g>`,
@@ -75,9 +79,11 @@
       <circle cx="36" cy="38" r="7"/><circle cx="50" cy="37" r="7"/><circle cx="64" cy="38" r="7"/>
       <circle cx="43" cy="51" r="7"/><circle cx="57" cy="51" r="7"/><circle cx="50" cy="64" r="7"/><circle cx="50" cy="78" r="6"/></g>`,
     hotton: `<g ${S}>
-      <path d="M26 18h40v28c0 18-10 30-20 36-10-6-20-18-20-36Z"/>
-      <g class="z-flakker" style="transform-origin:46px 66px"><path d="M46 66c-9-4-9-15 0-24 2 6 7 8 7 15 0 5-3 8-7 9Z"/></g>
-      <path class="z-vooruit" d="M74 34l7 7-7 7M82 34l7 7-7 7"/></g>`,
+      <path d="M24 16h44v30c0 20-11 32-22 38-11-6-22-18-22-38Z"/>
+      <g class="z-flakker" style="transform-origin:46px 70px">
+        <path d="M46 72c-11 0-16-9-12-18 2-5 6-8 6-15 6 4 8 9 7 14 3-2 4-6 4-9 6 5 8 12 7 17-1 7-6 11-12 11Z"/>
+        <path d="M46 72c-4 0-6-3-5-7 1-3 4-4 4-8 3 3 5 6 4 9 0 4-1 6-3 6Z"/></g>
+      <path class="z-vooruit" d="M76 34l7 7-7 7M84 34l7 7-7 7"/></g>`,
     borncrazy: `<g ${S}>
       <g class="z-wheelie" style="transform-origin:68px 70px">
         <circle cx="30" cy="70" r="13"/><circle cx="68" cy="70" r="13"/>

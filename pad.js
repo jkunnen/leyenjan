@@ -375,8 +375,7 @@
 
   const wissels = items.filter((it) => it.voertuig && voertuigen[it.voertuig]).map((it) => ({ len: it.len, soort: it.voertuig }));
 
-  // Vrienden die een stuk meereizen: hun voertuig rijdt achter het onze.
-  // Op een punt geldt het tot aan de volgende halte, op een halte rond die halte.
+  // Vrienden die een stuk meereizen: hun camionettes (of auto met daktent).
   const maakVriend = (soort) => {
     const g = el("g", { class: "p-vriend", "aria-hidden": "true" });
     if (soort === "daktent") {   // auto met een daktent
@@ -392,20 +391,62 @@
     svg.insertBefore(g, van);
     return g;
   };
-  const vensters = [];
-  items.forEach((it, i) => {
+  // Op een moment met vrienden rijden hun camionettes van onder aan de berg naar ons toe,
+  // en parkeren ze naast ons. Daarna blijven ze daar samen staan.
+  const plekken = [];
+  items.forEach((it) => {
     if (!it.konvooi.length) return;
-    const volgendeHalte = items.slice(i + 1).find((o) => !o.punt);
-    const van0 = it.punt ? it.len - 30 : it.len - 70;
-    const tot = it.punt ? (volgendeHalte ? volgendeHalte.len + 5 : it.len + 60) : it.len + 25;
-    vensters.push({ van: van0, tot, wagens: it.konvooi.map(maakVriend) });
+    const plek = { len: it.punt ? it.len - 8 : it.len - 42, gedaan: false, wagens: [] };
+    it.konvooi.forEach((soort, k) => {
+      const g = maakVriend(soort);
+      const eindLen = plek.len - 56 * (k + 1);               // achter ons geparkeerd
+      const P = pad.getPointAtLength(Math.max(0, eindLen));
+      const kant = k % 2 ? -1 : 1, bodem = H - 16;
+      // een weggetje met bochten, van onder aan de berg naar de parkeerplek
+      const wp = [[P.x + kant * 46, bodem], [P.x - kant * 24, bodem - (bodem - P.y) * 0.38], [P.x + kant * 28, bodem - (bodem - P.y) * 0.72], [P.x, P.y]];
+      let d = `M${wp[0][0].toFixed(1)},${wp[0][1].toFixed(1)}`;
+      for (let q = 1; q < wp.length; q++) {
+        const m = q < wp.length - 1 ? [(wp[q][0] + wp[q + 1][0]) / 2, (wp[q][1] + wp[q + 1][1]) / 2] : wp[q];
+        d += q < wp.length - 1 ? ` Q${wp[q][0].toFixed(1)},${wp[q][1].toFixed(1)} ${m[0].toFixed(1)},${m[1].toFixed(1)}` : ` L${m[0].toFixed(1)},${m[1].toFixed(1)}`;
+      }
+      const weg = el("path", { d, class: "p-weg" });
+      svg.insertBefore(weg, pad);
+      plek.wagens.push({ g, weg, eindLen });
+    });
+    plekken.push(plek);
   });
+  plekken.sort((a, b) => a.len - b.len);
   const plaatsOp = (g, len) => {
     const a = pad.getPointAtLength(Math.max(0, Math.min(L, len)));
     const b = pad.getPointAtLength(Math.max(0, Math.min(L, len + 2)));
     const hoek = Math.max(-22, Math.min(22, Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI));
     g.setAttribute("transform", `translate(${a.x.toFixed(1)},${(a.y - 2).toFixed(1)}) rotate(${hoek.toFixed(1)}) scale(1.35)`);
   };
+  const wacht = (ms) => new Promise((r) => setTimeout(r, ms));
+  // de vrienden rijden hun weggetje op (allemaal tegelijk, een beetje na elkaar)
+  function aankomst(plek) {
+    plek.gedaan = true;
+    return Promise.all(plek.wagens.map(({ g, weg, eindLen }, k) => new Promise((klaar) => {
+      weg.classList.add("zichtbaar");
+      g.style.display = "";
+      const L2 = weg.getTotalLength(), duur = 1700 + k * 350, t0 = performance.now() + k * 250;
+      const zetOpWeg = (l) => {
+        const a = weg.getPointAtLength(Math.max(0, Math.min(L2, l))), b = weg.getPointAtLength(Math.max(0, Math.min(L2, l + 2)));
+        const links = b.x < a.x;
+        const hoek = Math.max(-30, Math.min(30, Math.atan2(b.y - a.y, Math.abs(b.x - a.x)) * 180 / Math.PI));
+        g.setAttribute("transform", `translate(${a.x.toFixed(1)},${(a.y - 2).toFixed(1)}) scale(${links ? -1.35 : 1.35},1.35) rotate(${hoek.toFixed(1)})`);
+      };
+      if (traag) { plaatsOp(g, eindLen); klaar(); return; }
+      zetOpWeg(0);
+      const loop = (nu) => {
+        const t = Math.max(0, Math.min(1, (nu - t0) / duur));
+        const e = 1 - Math.pow(1 - t, 3);                     // rustig afremmen bij het parkeren
+        if (t < 1) { zetOpWeg(e * L2); requestAnimationFrame(loop); }
+        else { plaatsOp(g, eindLen); setTimeout(() => weg.classList.remove("zichtbaar"), 1200); klaar(); }
+      };
+      requestAnimationFrame(loop);
+    })));
+  }
 
   // 6. Rijden en kiezen
   let huidig = 0, doel = 0, anim = null, actief = 0;
@@ -418,41 +459,59 @@
     let soort = wissels.length ? wissels[0].soort : "ivette";
     for (const w of wissels) if (len >= w.len - 50) soort = w.soort;
     for (const k in voertuigen) voertuigen[k].style.display = k === soort ? "" : "none";
-    // vrienden in het konvooi, achter ons
-    vensters.forEach((v) => {
-      const aan = len >= v.van && len <= v.tot;
-      v.wagens.forEach((g, k) => {
-        g.style.display = aan ? "" : "none";
-        if (aan) plaatsOp(g, len - 62 - k * 44);
-      });
-    });
   };
   const traag = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const rijNaar = (len) => {
+  let rit = 0;   // elke nieuwe keuze annuleert de vorige rit
+  const rijTot = (len, nr) => new Promise((klaar) => {
     doel = len;
-    if (traag) { huidig = doel; zet(huidig); return; }
-    if (anim) return;
+    if (traag) { huidig = doel; zet(huidig); klaar(); return; }
+    if (anim) cancelAnimationFrame(anim);
     const stap2 = () => {
+      if (nr !== rit) { anim = null; klaar(); return; }
       huidig += (doel - huidig) * 0.1;
-      if (Math.abs(doel - huidig) < 0.5) { huidig = doel; anim = null; zet(huidig); return; }
+      if (Math.abs(doel - huidig) < 0.5) { huidig = doel; anim = null; zet(huidig); klaar(); return; }
       zet(huidig); anim = requestAnimationFrame(stap2);
     };
     anim = requestAnimationFrame(stap2);
-  };
+  });
+  async function rijNaar(len) {
+    const nr = ++rit;
+    // terug in de tijd: vrienden van later zijn er nog niet, ze rijden straks opnieuw naar ons toe
+    plekken.forEach((p) => {
+      if (p.gedaan && p.len > len + 1) {
+        p.gedaan = false;
+        p.wagens.forEach(({ g, weg }) => { g.style.display = "none"; weg.classList.remove("zichtbaar"); });
+      }
+    });
+    // rijden we vooruit langs een plek waar vrienden aansluiten? dan stoppen we daar even
+    while (true) {
+      const plek = plekken.find((p) => !p.gedaan && p.len > huidig + 1 && p.len <= len + 1);
+      if (!plek) break;
+      await rijTot(plek.len, nr);
+      if (nr !== rit) return;
+      await aankomst(plek);
+      if (nr !== rit) return;
+      await wacht(900);
+      if (nr !== rit) return;
+    }
+    await rijTot(len, nr);
+  }
   const vorige = document.getElementById("pad-vorige"), volgende = document.getElementById("pad-volgende");
   // bij momenten van afscheid: een stille voetnoot
   const voetnoot = document.createElement("span");
   voetnoot.className = "h-voetnoot"; voetnoot.hidden = true;
   kaart.querySelector(".pad-tekst").appendChild(voetnoot);
-  // het teken in inkt als labeltje in het kaartje
+  // het teken in inkt: groot, als tekening rechts in het kaartje
   const INKT = {
-    hibiscus: '<svg viewBox="-8 -8 16 16" aria-hidden="true"><circle cx="0" cy="-3.6" r="2.4"/><circle cx="3.4" cy="-1.1" r="2.4"/><circle cx="2.1" cy="2.9" r="2.4"/><circle cx="-2.1" cy="2.9" r="2.4"/><circle cx="-3.4" cy="-1.1" r="2.4"/><circle cx="0" cy="0" r="1.2" class="hart"/></svg><span>hibiscus</span>',
-    quoi: '<span class="woord">Quoi?</span>',
-    h: '<span class="woord">H</span>'
+    hibiscus: `<svg viewBox="0 0 100 100" aria-hidden="true"><g transform="rotate(0 50 50)"><path d="M50 50C36 42 28 26 36 15q4-5 8-2q3-4 6-4q3 0 6 4q4-3 8 2C72 26 64 42 50 50Z"/><path class="ader" d="M50 50L50 18"/></g><g transform="rotate(72 50 50)"><path d="M50 50C36 42 28 26 36 15q4-5 8-2q3-4 6-4q3 0 6 4q4-3 8 2C72 26 64 42 50 50Z"/><path class="ader" d="M50 50L50 18"/></g><g transform="rotate(144 50 50)"><path d="M50 50C36 42 28 26 36 15q4-5 8-2q3-4 6-4q3 0 6 4q4-3 8 2C72 26 64 42 50 50Z"/><path class="ader" d="M50 50L50 18"/></g><g transform="rotate(216 50 50)"><path d="M50 50C36 42 28 26 36 15q4-5 8-2q3-4 6-4q3 0 6 4q4-3 8 2C72 26 64 42 50 50Z"/><path class="ader" d="M50 50L50 18"/></g><g transform="rotate(288 50 50)"><path d="M50 50C36 42 28 26 36 15q4-5 8-2q3-4 6-4q3 0 6 4q4-3 8 2C72 26 64 42 50 50Z"/><path class="ader" d="M50 50L50 18"/></g>
+      <path class="meeldraad" d="M50 50Q66 40 78 24"/><circle class="stip" cx="79" cy="22" r="2.6"/><circle class="stip" cx="74" cy="22" r="2"/><circle class="stip" cx="80" cy="28" r="2"/><circle class="stip" cx="76" cy="17" r="1.8"/><circle class="stip" cx="83" cy="20" r="1.8"/>
+      <circle class="hart" cx="50" cy="50" r="5"/></svg>`,
+    quoi: `<svg viewBox="0 0 120 100" aria-hidden="true"><text x="60" y="62" text-anchor="middle" class="schrift">Quoi?</text><path class="lijn" d="M20 74q40 8 80-2"/></svg>`,
+    h: `<svg viewBox="0 0 100 100" aria-hidden="true"><path class="letter" d="M30 18v64M70 18v64M30 50h40M22 18h16M62 18h16M22 82h16M62 82h16"/></svg>`
   };
-  const inktLabel = document.createElement("span");
-  inktLabel.className = "inkt-label"; inktLabel.hidden = true;
-  kaart.querySelector(".pad-tekst").appendChild(inktLabel);
+  const inktLabel = document.createElement("figure");
+  inktLabel.className = "inkt-beeld"; inktLabel.hidden = true;
+  kaart.insertBefore(inktLabel, document.getElementById("pad-volgende"));
   const nh = haltes.length;
   function kies(i) {
     actief = i; const it = haltes[i];
