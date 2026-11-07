@@ -1,4 +1,4 @@
-/* Stalen huwelijk · huisstijl · versie 7nov-5 (met Ons pad)
+/* Stalen huwelijk · huisstijl · versie 7nov-6 (met Ons pad)
    Staal en wit, Fredoka voor titels, Nunito voor tekst, stempelrood als enige knipoog. */
 :root {
   --wit: #ffffff;
@@ -157,22 +157,6 @@ p { margin: 0 0 1em; max-width: 62ch; }
 
 .section.tinted { background: var(--staal-mist); }
 
-/* contact */
-.contact { margin-top: 40px; padding-top: 24px; border-top: 2px solid var(--grafiet); }
-.contact h3 { margin-bottom: 14px; }
-.contact-cards { display: flex; flex-wrap: wrap; gap: 12px; }
-.contact-card { display: grid; gap: 8px; padding: 16px 18px; background: var(--staal-mist); border-radius: 4px; min-width: min(100%, 260px); flex: 1 1 260px; }
-.contact-card .c-naam { font: 600 1.25rem/1 var(--display); }
-.contact-card .c-nr { font-variant-numeric: tabular-nums; }
-.contact-card .c-links { display: flex; gap: 8px; flex-wrap: wrap; }
-.contact-card .c-links a { text-decoration: none; font: 600 0.95rem/1 var(--display); padding: 9px 14px; border-radius: 4px; background: var(--grafiet); color: var(--wit); }
-.contact-card .c-links a.alt { background: transparent; color: var(--grafiet); border: 1px solid var(--grafiet); }
-
-.facts { margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 205px), 1fr)); gap: 0 36px; }
-.facts div { padding: 18px 0; border-top: 1px solid var(--staal-licht); min-width: 0; }
-.facts dt { font: 600 1.15rem/1.2 var(--display); margin-bottom: 4px; }
-.facts dd { margin: 0; }
-
 /* ---------- inschrijven (op staal) ---------- */
 .section.steel { background: var(--staal-donker) url("assets/staal.jpg") center / cover; color: var(--wit); }
 .steel .kicker { color: var(--wit); }
@@ -203,12 +187,66 @@ p { margin: 0 0 1em; max-width: 62ch; }
 .status.fout { color: var(--wit); background: var(--stempelrood); padding: 8px 12px; border-radius: 4px; }
 .privacy { font-size: 0.9rem; opacity: 0.9; margin-top: 24px; }
 
-/* ---------- nieuws ---------- */
-.news { display: grid; gap: 0; }
-.news article { padding: 20px 0; border-top: 1px solid var(--staal-licht); }
+/* ---------- stalen plaatjes ---------- */
+/* Een plaatje geslepen staal met vier klinknagels in de hoeken. */
+.plaat {
+  --nagel: radial-gradient(circle at 50% 45%, #f4f6f8 0 1.2px, #8c939a 1.6px 3px, transparent 3.4px);
+  position: relative; color: var(--wit);
+  background:
+    var(--nagel) 10px 10px / 8px 8px no-repeat,
+    var(--nagel) calc(100% - 10px) 10px / 8px 8px no-repeat,
+    var(--nagel) 10px calc(100% - 10px) / 8px 8px no-repeat,
+    var(--nagel) calc(100% - 10px) calc(100% - 10px) / 8px 8px no-repeat,
+    linear-gradient(rgba(31,35,40,.38), rgba(31,35,40,.38)),
+    var(--staal-donker) url("assets/staal.jpg") center / 900px auto;
+  border-radius: 6px;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.18), inset 0 -2px 0 rgba(0,0,0,.18);
+}
+.platen { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 16px; margin-bottom: 44px; }
+.platen .plaat { display: grid; align-content: start; gap: 6px; padding: 26px 26px 28px; min-width: 0; }
+.p-label { font: 400 0.95rem/1 var(--display); letter-spacing: .06em; opacity: .9; }
+.p-label::before { content: "*"; }
+.p-groot { font: 600 clamp(1.6rem, 3.2vw, 2.1rem)/1.05 var(--display); letter-spacing: -.01em; text-wrap: balance; }
+.p-klein { font-size: 1rem; line-height: 1.5; opacity: .95; }
+
+h3.sub { font: 600 1.35rem/1.2 var(--display); margin: 0 0 14px; }
+
+/* goed om te weten: kleine iconen, gescheiden door een trail van stippen */
+.weetjes { list-style: none; margin: 0 0 44px; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: 0 48px; }
+.weetjes li { display: grid; grid-template-columns: 40px 1fr; gap: 14px; align-items: start; padding: 16px 0; border-top: 3px dotted var(--staal-licht); min-width: 0; }
+.weetjes .i { width: 30px; height: 30px; margin-top: 2px; fill: none; stroke: var(--grafiet); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.weetjes strong { font: 600 1.15rem/1.2 var(--display); }
+.weetjes p { margin: 4px 0 0; }
+
+/* contact als stalen naamplaatjes */
+.contact-cards { display: flex; flex-wrap: wrap; gap: 14px; }
+.contact-card { display: grid; gap: 8px; padding: 20px 24px; min-width: min(100%, 260px); flex: 1 1 260px; }
+.contact-card .c-naam { font: 600 1.4rem/1 var(--display); }
+.contact-card .c-nr { font-variant-numeric: tabular-nums; letter-spacing: .02em; }
+.contact-card .c-links { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+.contact-card .c-links a { text-decoration: none; font: 600 0.95rem/1 var(--display); padding: 10px 16px; border-radius: 4px; background: var(--wit); color: var(--grafiet); }
+.contact-card .c-links a.alt { background: transparent; color: var(--wit); border: 1px solid rgba(255,255,255,.8); }
+
+/* bergkammen boven en onder de stalen sectie */
+.section.steel { position: relative; padding-top: clamp(110px, 14vw, 170px); padding-bottom: clamp(110px, 14vw, 170px); }
+.rand { position: absolute; left: 0; width: 100%; height: clamp(50px, 7vw, 100px); fill: var(--wit); pointer-events: none; }
+.rand-top { top: -1px; }
+.rand-bot { bottom: -1px; }
+
+/* ---------- nieuws: als etappes op een trail ---------- */
+.news { display: grid; gap: 0; border-left: 3px dotted var(--staal); margin-left: 8px; }
+.news article { position: relative; padding: 4px 0 26px 28px; }
+.news article::before { content: ""; position: absolute; left: -11px; top: 6px; width: 13px; height: 13px; border-radius: 50%; background: var(--wit); border: 3px solid var(--grafiet); }
+.news article:first-child::before { background: var(--grafiet); }
 .news time { font: 500 0.95rem/1 var(--display); color: var(--staal-donker); }
 
-/* ---------- footer ---------- */
-.footer { text-align: center; padding: 48px var(--gutter) 64px; border-top: 1px solid var(--staal-licht); color: var(--staal-donker); }
+/* ---------- footer: de camionette geparkeerd op de bergkam ---------- */
+.footer { position: relative; text-align: center; color: var(--staal-donker); padding: 0 0 48px; background: var(--staal-mist); overflow: hidden; }
+.footer-berg { display: block; width: 100%; height: 150px; background: var(--wit); }
+.fb-grond { fill: var(--staal-mist); }
+.fb-ver { fill: none; stroke: var(--staal-licht); stroke-width: 2; stroke-linejoin: round; }
+.fb-trail { fill: none; stroke: var(--staal); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 0 9; }
+.footer-inhoud { padding: 0 max(20px, env(safe-area-inset-left, 0px)); }
+.footer-van { width: 130px; height: 63px; margin: -96px auto 14px; display: block; position: relative; }
 .footer .mark { margin: 0 auto 4px; font: 600 2.4rem/1 var(--display); color: var(--grafiet); }
 .footer p { margin-inline: auto; }
