@@ -1,3 +1,4 @@
+// rsvp.js · versie 7nov-5 (met contactkaartjes)
 // ---------------------------------------------------------------
 // Inschrijvingen gaan naar jullie Google Form (en dus de sheet).
 // Vul hieronder de link en de veldnummers in zodra het formulier
@@ -14,6 +15,21 @@ const FIELDS = {
   camionette: "",
   bericht: ""
 };
+
+// Contactkaartjes: nummer pas hier samenstellen (minder spam van bots)
+document.querySelectorAll(".contact-card").forEach((card) => {
+  const d = (card.dataset.nr || "").split("|");
+  if (d.length < 5) return;
+  const intl = d.join("");                                  // 32497852938
+  const mooi = "+" + d[0] + " " + d.slice(1).join(" ");    // +32 497 85 29 38
+  card.innerHTML =
+    '<span class="c-naam"></span><span class="c-nr"></span>' +
+    '<span class="c-links"><a class="wa" target="_blank" rel="noopener">WhatsApp</a><a class="alt tel">Bellen</a></span>';
+  card.querySelector(".c-naam").textContent = card.dataset.naam;
+  card.querySelector(".c-nr").textContent = mooi;
+  card.querySelector(".wa").href = "https://wa.me/" + intl;
+  card.querySelector(".tel").href = "tel:+" + intl;
+});
 
 // Aftellen naar het feest
 (function () {
