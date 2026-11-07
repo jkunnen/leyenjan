@@ -1,4 +1,4 @@
-/* Stalen huwelijk · huisstijl · versie 7nov-29 (met Ons pad)
+/* Stalen huwelijk · huisstijl · versie 7nov-30 (met Ons pad)
    Staal en wit, Fredoka voor titels, Nunito voor tekst, stempelrood als enige knipoog. */
 :root {
   --wit: #ffffff;
@@ -368,7 +368,7 @@ h3.sub { font: 600 1.35rem/1.2 var(--display); margin: 0 0 14px; }
 
 /* stickers in de grond */
 .p-sticker .st-rond { fill: var(--grafiet); }
-.p-sticker .st-rand { fill: none; stroke: var(--wit); stroke-width: .8; }
+.p-sticker .st-rand { fill: none; stroke: var(--grafiet); stroke-width: 1.2; }
 .p-sticker .st-tekst { font: 600 7.6px/1 var(--display); letter-spacing: .06em; fill: var(--wit); }
 .p-sticker .st-lijn { fill: none; stroke: var(--wit); stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
 /* andere rijders in een wedstrijd */

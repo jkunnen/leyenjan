@@ -84,13 +84,10 @@
       <path d="M40 37l-3-5M46 32l-2-6M52 29l-1-6M58 28l0-6M64 29l2-5"/>
       <circle cx="78" cy="48" r="1.8" fill="currentColor"/><path d="M84 64q6-1 5-9"/><path d="M94 60v4"/>
       <g class="z-wieg" style="transform-origin:18px 56px"><path d="M18 56q-5 1-7-3M11 53l-2-3M11 53l-3 1"/></g></g>`,
-    borncrazy: `<g ${S}>
-      <circle cx="50" cy="50" r="46"/><circle cx="50" cy="50" r="41"/>
-      <path id="z-boog-bc" d="M20,50 a30,30 0 0 1 60,0" stroke="none"/>
-      <text style="font:600 12.5px var(--display);letter-spacing:.1em;fill:var(--staal)" stroke="none"><textPath href="#z-boog-bc" startOffset="50%" text-anchor="middle">BORN CRAZY</textPath></text>
-      <g transform="translate(14 22) scale(.72)"><g class="z-wheelie" style="transform-origin:68px 70px">
-        <circle cx="30" cy="70" r="13"/><circle cx="68" cy="70" r="13"/>
-        <path d="M30 70h18l-7-20ZM48 70l16-22H41M64 48l4 22M64 48l-2-8h8M37 50h9"/></g></g></g>`,
+    borncrazy: `<g>
+      <clipPath id="z-clip-bc"><circle cx="50" cy="50" r="44"/></clipPath>
+      <image href="assets/borncrazy.jpg" x="6" y="6" width="88" height="88" clip-path="url(#z-clip-bc)" preserveAspectRatio="xMidYMid slice"/>
+      <circle cx="50" cy="50" r="44" fill="none"/></g>`,
     hantilopen: `<g ${S}>
       <path d="M12 60a38 38 0 0 1 76 0"/><path d="M14 50l-6-2M20 36l-5-4M31 25l-3-6M44 21l-1-6M56 21l1-6M69 25l3-6M80 36l5-4M86 50l6-2"/>
       <path d="M50 86c-7 0-11-7-11-15 0-11 4-21 11-25 7 4 11 14 11 25 0 8-4 15-11 15Z"/>

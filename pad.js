@@ -208,15 +208,11 @@
       el("circle", { cx: 0, cy: 0, r: R, class: "st-rond" }, g);
       if (it.sticker === "dromen") {   // bergen met een opkomende zon
         el("path", { d: "M-11,6 L-4,-2 L-1,1 L4,-6 L11,5 M4,-9 a3,3 0 0 1 6,0 M7,-14 v-2 M11,-12 l1.5,-1.5 M3,-12 l-1.5,-1.5", class: "st-lijn" }, g);
-      } else {                         // Born Crazy: de naam in een boog, met een fiets op het achterwiel
-        el("circle", { cx: 0, cy: 0, r: R - 2.2, class: "st-rand" }, g);
-        el("path", { id: "st-boog-bc", d: `M${-(R - 6.5)},0 a${R - 6.5},${R - 6.5} 0 0 1 ${2 * (R - 6.5)},0`, fill: "none" }, g);
-        const t = el("text", { class: "st-tekst" }, g);
-        const tp = el("textPath", { href: "#st-boog-bc", startOffset: "50%", "text-anchor": "middle" }, t);
-        tp.textContent = "BORN CRAZY";
-        const f = el("g", { transform: "translate(1 8) scale(0.85) rotate(-18 4 4)" }, g);
-        el("circle", { cx: -5, cy: 4, r: 4, class: "st-lijn" }, f); el("circle", { cx: 7, cy: 4, r: 4, class: "st-lijn" }, f);
-        el("path", { d: "M-5,4 h6 l-2,-6 Z M1,4 l5,-7 h-8 M6,-3 l1,7 M6,-3 l-0.6,-2.4 h2.4", class: "st-lijn" }, f);
+      } else {                         // Born Crazy: de echte sticker van de bende
+        const clip = el("clipPath", { id: "st-clip-bc" }, g);
+        el("circle", { cx: 0, cy: 0, r: R }, clip);
+        el("image", { href: "assets/borncrazy.jpg", x: -R, y: -R, width: 2 * R, height: 2 * R, "clip-path": "url(#st-clip-bc)", preserveAspectRatio: "xMidYMid slice" }, g);
+        el("circle", { cx: 0, cy: 0, r: R, class: "st-rand" }, g);
       }
     }
     // ballonnen voor de petekinderen (grafiet: van Jan, rood: van Leyla)
