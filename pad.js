@@ -396,7 +396,7 @@
   const plekken = [];
   items.forEach((it) => {
     if (!it.konvooi.length) return;
-    const plek = { len: it.punt ? it.len - 8 : it.len - 42, gedaan: false, wagens: [] };
+    const plek = { len: it.punt ? it.len - 8 : it.len - 42, aanwezig: false, tok: 0, wagens: [] };
     it.konvooi.forEach((soort, k) => {
       const g = maakVriend(soort);
       const eindLen = plek.len - 56 * (k + 1);               // achter ons geparkeerd
@@ -424,25 +424,44 @@
   };
   const wacht = (ms) => new Promise((r) => setTimeout(r, ms));
   // de vrienden rijden hun weggetje op (allemaal tegelijk, een beetje na elkaar)
-  function aankomst(plek) {
-    plek.gedaan = true;
-    return Promise.all(plek.wagens.map(({ g, weg, eindLen }, k) => new Promise((klaar) => {
-      weg.classList.add("zichtbaar");
-      g.style.display = "";
-      const L2 = weg.getTotalLength(), duur = 1700 + k * 350, t0 = performance.now() + k * 250;
+  // vrienden rijden hun weggetje op (op = true) of weer naar beneden (op = false)
+  function rijden(plek, op) {
+    plek.aanwezig = op;
+    const tok = ++plek.tok;
+    return Promise.all(plek.wagens.map((w, k) => new Promise((klaar) => {
+      const { g, weg, eindLen } = w;
+      const L2 = weg.getTotalLength();
+      if (w.pos === undefined) w.pos = 0;
       const zetOpWeg = (l) => {
-        const a = weg.getPointAtLength(Math.max(0, Math.min(L2, l))), b = weg.getPointAtLength(Math.max(0, Math.min(L2, l + 2)));
+        w.pos = l;
+        const a = weg.getPointAtLength(Math.max(0, Math.min(L2, l)));
+        const b = weg.getPointAtLength(Math.max(0, Math.min(L2, l + (op ? 2 : -2))));   // kijk in de rijrichting
         const links = b.x < a.x;
         const hoek = Math.max(-30, Math.min(30, Math.atan2(b.y - a.y, Math.abs(b.x - a.x)) * 180 / Math.PI));
         g.setAttribute("transform", `translate(${a.x.toFixed(1)},${(a.y - 2).toFixed(1)}) scale(${links ? -1.35 : 1.35},1.35) rotate(${hoek.toFixed(1)})`);
       };
-      if (traag) { plaatsOp(g, eindLen); klaar(); return; }
-      zetOpWeg(0);
+      if (traag) {
+        if (op) { g.style.display = ""; plaatsOp(g, eindLen); w.pos = L2; } else { g.style.display = "none"; w.pos = 0; }
+        klaar(); return;
+      }
+      weg.classList.add("zichtbaar"); g.style.display = "";
+      const van = w.pos, naar = op ? L2 : 0;
+      const deel = Math.abs(naar - van) / L2 || 0;
+      const duur = (op ? 1700 + k * 350 : 1300 + k * 200) * Math.max(0.3, deel);
+      const t0 = performance.now() + k * (op ? 250 : 150);
+      zetOpWeg(van);
       const loop = (nu) => {
+        if (tok !== plek.tok) { klaar(); return; }              // ondertussen iets anders gekozen
         const t = Math.max(0, Math.min(1, (nu - t0) / duur));
-        const e = 1 - Math.pow(1 - t, 3);                     // rustig afremmen bij het parkeren
-        if (t < 1) { zetOpWeg(e * L2); requestAnimationFrame(loop); }
-        else { plaatsOp(g, eindLen); setTimeout(() => weg.classList.remove("zichtbaar"), 1200); klaar(); }
+        const e = op ? 1 - Math.pow(1 - t, 3) : t * t;          // rustig parkeren, vlot vertrekken
+        if (t < 1) { zetOpWeg(van + (naar - van) * e); requestAnimationFrame(loop); return; }
+        if (op) {
+          plaatsOp(g, eindLen); w.pos = L2;
+          setTimeout(() => { if (tok === plek.tok) weg.classList.remove("zichtbaar"); }, 1200);
+        } else {
+          g.style.display = "none"; w.pos = 0; weg.classList.remove("zichtbaar");
+        }
+        klaar();
       };
       requestAnimationFrame(loop);
     })));
@@ -476,25 +495,25 @@
   });
   async function rijNaar(len) {
     const nr = ++rit;
-    // terug in de tijd: vrienden van later zijn er nog niet, ze rijden straks opnieuw naar ons toe
-    plekken.forEach((p) => {
-      if (p.gedaan && p.len > len + 1) {
-        p.gedaan = false;
-        p.wagens.forEach(({ g, weg }) => { g.style.display = "none"; weg.classList.remove("zichtbaar"); });
-      }
-    });
+    // wie nu bij ons staat, rijdt weer naar beneden zodra wij verder gaan
+    plekken.forEach((p) => { if (p.aanwezig && Math.abs(p.len - len) > 1) rijden(p, false); });
     // rijden we vooruit langs een plek waar vrienden aansluiten? dan stoppen we daar even
     while (true) {
-      const plek = plekken.find((p) => !p.gedaan && p.len > huidig + 1 && p.len <= len + 1);
+      const plek = plekken.find((p) => !p.aanwezig && p.len > huidig + 1 && p.len <= len + 1);
       if (!plek) break;
       await rijTot(plek.len, nr);
       if (nr !== rit) return;
-      await aankomst(plek);
+      await rijden(plek, true);
       if (nr !== rit) return;
+      if (Math.abs(plek.len - len) <= 1) return;   // hier blijven we samen staan
       await wacht(900);
       if (nr !== rit) return;
+      rijden(plek, false);                         // zij rijden weer naar beneden, wij verder
     }
     await rijTot(len, nr);
+    if (nr !== rit) return;
+    const hier = plekken.find((p) => !p.aanwezig && Math.abs(p.len - len) <= 1);
+    if (hier) rijden(hier, true);
   }
   const vorige = document.getElementById("pad-vorige"), volgende = document.getElementById("pad-volgende");
   // bij momenten van afscheid: een stille voetnoot
