@@ -79,11 +79,11 @@
       <circle cx="36" cy="38" r="7"/><circle cx="50" cy="37" r="7"/><circle cx="64" cy="38" r="7"/>
       <circle cx="43" cy="51" r="7"/><circle cx="57" cy="51" r="7"/><circle cx="50" cy="64" r="7"/><circle cx="50" cy="78" r="6"/></g>`,
     hotton: `<g ${S}>
-      <path d="M24 16h44v30c0 20-11 32-22 38-11-6-22-18-22-38Z"/>
-      <g class="z-flakker" style="transform-origin:46px 70px">
-        <path d="M46 72c-11 0-16-9-12-18 2-5 6-8 6-15 6 4 8 9 7 14 3-2 4-6 4-9 6 5 8 12 7 17-1 7-6 11-12 11Z"/>
-        <path d="M46 72c-4 0-6-3-5-7 1-3 4-4 4-8 3 3 5 6 4 9 0 4-1 6-3 6Z"/></g>
-      <path class="z-vooruit" d="M76 34l7 7-7 7M84 34l7 7-7 7"/></g>`,
+      <path d="M18 58C18 48 24 42 34 40C42 34 50 26 60 28C66 29 70 33 72 37L76 32L77 41C82 46 88 54 94 60V64C90 66 84 65 80 63C76 66 72 68 68 68L67 82H62L60 69C50 70 40 70 32 68L30 82H25V66C20 64 18 61 18 58Z"/>
+      <path d="M56 70l-3 11M36 69l-3 11"/>
+      <path d="M40 37l-3-5M46 32l-2-6M52 29l-1-6M58 28l0-6M64 29l2-5"/>
+      <circle cx="78" cy="48" r="1.8" fill="currentColor"/><path d="M84 64q6-1 5-9"/><path d="M94 60v4"/>
+      <g class="z-wieg" style="transform-origin:18px 56px"><path d="M18 56q-5 1-7-3M11 53l-2-3M11 53l-3 1"/></g></g>`,
     borncrazy: `<g ${S}>
       <g class="z-wheelie" style="transform-origin:68px 70px">
         <circle cx="30" cy="70" r="13"/><circle cx="68" cy="70" r="13"/>
