@@ -20,7 +20,7 @@
 <!-- ============ WELKOM ============ -->
 <header class="hero" id="welkom">
   <nav class="nav" aria-label="Menu">
-    <a href="#verhaal">ons verhaal</a>
+    <a href="#verhaal">ons pad</a>
     <a href="#onderweg">onderweg</a>
     <a href="#praktisch">praktisch</a>
     <a href="#inschrijven">inschrijven</a>
@@ -50,32 +50,125 @@
 
 <main>
 
-<!-- ============ VERHAAL ============ -->
+<!-- ============ ONS PAD ============ -->
+<!-- De levenslijn. Elk <li> is een halte op ons pad, in volgorde.
+     data-jaar   = het jaartal onder de halte
+     data-hoogte = hoe hoog: 0 (laag) tot 3.5 (hoog plateau). Het pad stijgt in het algemeen.
+     data-daarna = (optioneel) een tweede hoogte vlak erna, voor een moment dat snel omslaat
+     class="stil" = een moment van afscheid: rustig aangeduid
+     Een halte toevoegen? Kopieer een <li>, pas aan, en zet hem op de juiste plek. -->
 <section class="section" id="verhaal">
-  <div class="wrap narrow">
+  <div class="wrap">
     <p class="kicker">leyla &amp; jan</p>
-    <h2>Het stalen huwelijk</h2>
-    <ol class="timeline">
-      <li><span class="t-date">02.02.2007</span><span class="t-what">Samen.</span></li>
-      <li><span class="t-date">02.07.2016</span><span class="t-what">Getrouwd.</span></li>
-      <li><span class="t-date">2022 – 2023</span><span class="t-what">Een jaar op schok met Ivette de Camionette, kriskras door Europa. The good life.</span></li>
-      <li><span class="t-date">2026</span><span class="t-what">Ons tinnen huwelijk stond gepland, maar een stalen keuken ging voor. Een prachtige keuken, waarin Leyla nu haar heerlijkste gerechten maakt.</span></li>
-      <li class="now"><span class="t-date">02.07.2027</span><span class="t-what">Het stalen huwelijk. Exact 11 jaar na onze trouwdag vieren we het, met de mensen die we graag zien.</span></li>
+    <h2>Ons pad</h2>
+    <p class="lead">Twintig jaar samen onderweg. Hoogtes, mindere hoogtes, en altijd veel liefde. Op weg naar een hoog plateau.</p>
+
+    <div class="pad" id="pad" hidden>
+      <div class="pad-scroll">
+        <svg class="pad-svg" id="pad-svg" viewBox="0 0 1000 360" role="img" aria-labelledby="pad-titel">
+          <title id="pad-titel">Ons pad als hoogteprofiel: van 2007 langzaam stijgend naar een hoog plateau</title>
+        </svg>
+      </div>
+      <p class="pad-hint"><span class="hint-gsm">*swipe over het pad en tik op een halte</span><span class="hint-pc">*tik op een halte of gebruik de pijltjes</span></p>
+      <div class="pad-kaart" id="pad-kaart" aria-live="polite">
+        <button class="pad-nav" id="pad-vorige" type="button" aria-label="Vorige halte">‹</button>
+        <div class="pad-tekst"><span class="h-datum"></span><span class="h-titel"></span><span class="h-tekst"></span></div>
+        <button class="pad-nav" id="pad-volgende" type="button" aria-label="Volgende halte">›</button>
+      </div>
+    </div>
+
+    <ol class="haltes" id="haltes">
+      <li data-jaar="2007" data-hoogte="0.6">
+        <span class="h-datum">2007</span>
+        <span class="h-titel">Twee wegen, één pad</span>
+        <span class="h-tekst">Zo begon het.</span>
+      </li>
+      <li class="stil" data-jaar="2011" data-hoogte="0.3">
+        <span class="h-datum">2011</span>
+        <span class="h-titel">Afscheid</span>
+        <span class="h-tekst">Sommige mensen blijven, ook als ze gaan.</span>
+      </li>
+      <li data-jaar="2015" data-hoogte="1.4">
+        <span class="h-datum">najaar 2015</span>
+        <span class="h-titel">Ir. &amp; Dr.</span>
+        <span class="h-tekst">Twee diploma's, één richting: vooruit.</span>
+      </li>
+      <li data-jaar="2016" data-hoogte="1.6">
+        <span class="h-datum">voorjaar 2016</span>
+        <span class="h-titel">Aan de slag</span>
+        <span class="h-tekst">Hij zijn eigen baas, zij met een helm op.</span>
+      </li>
+      <li data-jaar="2016" data-hoogte="1.9">
+        <span class="h-datum">02.07.2016</span>
+        <span class="h-titel">Ja</span>
+        <span class="h-tekst">Voor het leven.</span>
+      </li>
+      <li data-jaar="2016" data-hoogte="2.2">
+        <span class="h-datum">2016 – 2017</span>
+        <span class="h-titel">Aan de andere kant van de wereld</span>
+        <span class="h-tekst">Ons hart bleef daar achter. De eerste van drie keer.</span>
+      </li>
+      <li data-jaar="2018" data-hoogte="2">
+        <span class="h-datum">voorjaar 2018</span>
+        <span class="h-titel">Een complete switch</span>
+        <span class="h-tekst">Van de werf naar het fornuis.</span>
+      </li>
+      <li class="stil" data-jaar="2021" data-hoogte="1.3">
+        <span class="h-datum">2021</span>
+        <span class="h-titel">Afscheid</span>
+        <span class="h-tekst">Wat je liefhebt, verlies je nooit helemaal.</span>
+      </li>
+      <li class="stil" data-jaar="2022" data-hoogte="1.2">
+        <span class="h-datum">2022</span>
+        <span class="h-titel">Afscheid</span>
+        <span class="h-tekst">Wie in ons hart leeft, is nooit echt weg.</span>
+      </li>
+      <li data-jaar="2022" data-hoogte="2.6">
+        <span class="h-datum">2022 – 2023</span>
+        <span class="h-titel">Thuis op vier wielen</span>
+        <span class="h-tekst">Een eigen zaak en een jaar op schok met Ivette. Hij bouwt aan een droom, zij schrijft een kookboek. The good life.</span>
+      </li>
+      <li class="stil" data-jaar="2023" data-hoogte="2.9" data-daarna="1.5">
+        <span class="h-datum">2023</span>
+        <span class="h-titel">Vreugde en verdriet</span>
+        <span class="h-tekst">Liggen soms dichter bij elkaar dan je denkt.</span>
+      </li>
+      <li data-jaar="2023" data-hoogte="2.4">
+        <span class="h-datum">najaar 2023</span>
+        <span class="h-titel">Elk een eigen vuur</span>
+        <span class="h-tekst">Hij bouwt aan leren, zij kookt voor anderen. Allebei op eigen benen.</span>
+      </li>
+      <li data-jaar="2024" data-hoogte="2.5">
+        <span class="h-datum">2024</span>
+        <span class="h-titel">Klein en gezellig</span>
+        <span class="h-tekst">Ivette rust in de tuin. Wij rijden verder.</span>
+      </li>
+      <li data-jaar="2025" data-hoogte="2.2">
+        <span class="h-datum">2025</span>
+        <span class="h-titel">Even bergop</span>
+        <span class="h-tekst">Samen doorgetrapt.</span>
+      </li>
+      <li data-jaar="2025" data-hoogte="2.7">
+        <span class="h-datum">najaar 2025</span>
+        <span class="h-titel">Nieuwe wind</span>
+        <span class="h-tekst">Een nieuw avontuur voor hem, een groeiende zaak voor haar.</span>
+      </li>
+      <li data-jaar="2026" data-hoogte="2.9">
+        <span class="h-datum">2026</span>
+        <span class="h-titel">Een keuze</span>
+        <span class="h-tekst">Eerst een stalen keuken, dan het feest.</span>
+      </li>
+      <li class="now" data-jaar="2027" data-hoogte="3.2">
+        <span class="h-datum">02.07.2027</span>
+        <span class="h-titel">Stalen huwelijk</span>
+        <span class="h-tekst">Met de mensen die we graag zien. *this time for real!</span>
+      </li>
     </ol>
-    <p class="aside">*this time for real! *we hope so</p>
   </div>
 </section>
 
 <!-- ============ ONDERWEG ============ -->
 <section class="section tinted" id="onderweg">
-  <figure class="photo">
-    <img src="assets/ivette-1600.jpg"
-         srcset="assets/ivette-800.jpg 800w, assets/ivette-1600.jpg 1600w"
-         sizes="(max-width: 1020px) 100vw, 980px"
-         width="1600" height="1200" loading="lazy"
-         alt="Ivette de Camionette, een groene bestelwagen, geparkeerd op een bergtop bij zonsondergang, met Jan ernaast">
-    <figcaption>*Ivette de Camionette · 2022–2023</figcaption>
-  </figure>
   <div class="wrap narrow">
     <p class="kicker">the good life</p>
     <h2>Onderweg</h2>
@@ -180,6 +273,7 @@
   <p>02.07.27 · 11 jaar getrouwd, 20 jaar liefde</p>
 </footer>
 
+<script src="pad.js"></script>
 <script src="rsvp.js"></script>
 </body>
 </html>
