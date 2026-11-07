@@ -1,4 +1,4 @@
-// rsvp.js · versie 7nov-9 (gekoppeld aan Google Form, contactkaartjes, slapen, antwoord bekijken en aanpassen)
+// rsvp.js · versie 7nov-10 (gekoppeld aan Google Form, contactkaartjes, slapen, antwoord bekijken en aanpassen)
 // ---------------------------------------------------------------
 // Inschrijvingen gaan naar jullie Google Form (en dus de sheet).
 // FORM_ACTION = het adres waar antwoorden naartoe gaan ("viewform" vervangen
@@ -125,10 +125,9 @@ document.querySelectorAll(".contact-card").forEach((card) => {
       form.reset();
       toonAntwoord(a);
       status.textContent = "";
-      const bedankt = document.createElement("p");
-      bedankt.className = "status";
+      let bedankt = kaart.querySelector(".bedankt");          // maar één bedankje tonen
+      if (!bedankt) { bedankt = document.createElement("p"); bedankt.className = "status bedankt"; kaart.prepend(bedankt); }
       bedankt.textContent = waarden.komt === "Nee" ? "Jammer! Bedankt om het te laten weten." : "Top, we hebben je antwoord. Tot 2 juli!";
-      kaart.prepend(bedankt);
     } catch (err) {
       fout("Versturen lukte niet. Probeer opnieuw of stuur ons een berichtje.");
     } finally {

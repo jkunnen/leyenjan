@@ -1,4 +1,4 @@
-/* Stalen huwelijk · huisstijl · versie 7nov-8 (met Ons pad)
+/* Stalen huwelijk · huisstijl · versie 7nov-10 (met Ons pad)
    Staal en wit, Fredoka voor titels, Nunito voor tekst, stempelrood als enige knipoog. */
 :root {
   --wit: #ffffff;
@@ -260,3 +260,49 @@ h3.sub { font: 600 1.35rem/1.2 var(--display); margin: 0 0 14px; }
 .mijn-antwoord button { font: 600 1.05rem/1 var(--display); background: var(--wit); color: var(--grafiet); border: 0; border-radius: 4px; padding: 13px 22px; cursor: pointer; }
 .rsvp[hidden], .mijn-antwoord[hidden] { display: none; }
 .honing { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+/* ---------- zijkant: lijntekeningen in de witruimte (alleen brede schermen) ---------- */
+/* De banden liggen achter de inhoud. Secties met een achtergrond (staal, footer) schuiven erover. */
+.zijkant { display: none; }
+@media (min-width: 1320px) {
+  .zijkant { display: block; position: fixed; top: 0; bottom: 0; width: calc((100vw - 1040px) / 2); overflow: hidden; z-index: 0; pointer-events: none; color: var(--staal-licht); }
+  .zijkant.links { left: 0; }
+  .zijkant.rechts { right: 0; }
+  .z-kolom { display: grid; gap: 90px; padding: 140px 0; will-change: transform; }
+  .z-fig { width: clamp(80px, 7vw, 120px); }
+  .z-fig.z-l { justify-self: start; margin-left: 22%; }
+  .z-fig.z-r { justify-self: end; margin-right: 22%; }
+  .z-fig svg { display: block; width: 100%; height: auto; overflow: visible; stroke: var(--staal); stroke-width: 2; opacity: .55; }
+  .hero, .section.steel, .footer { position: relative; z-index: 1; }
+  main, .section { position: relative; z-index: auto; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .z-draai { animation: z-draai 2.4s linear infinite; }
+  .z-hobbel { animation: z-hobbel 1.6s ease-in-out infinite; }
+  .z-wieg { animation: z-wieg 5s ease-in-out infinite; }
+  .z-wiebel { animation: z-wiebel 6s ease-in-out infinite; }
+  .z-knipper { animation: z-knipper 1.1s steps(1) infinite; }
+  .z-zon { animation: z-zon 12s ease-in-out infinite alternate; }
+  .z-wapper { animation: z-wapper 2.2s ease-in-out infinite; }
+  .z-been1 { animation: z-stap 1.2s ease-in-out infinite; }
+  .z-been2 { animation: z-stap 1.2s ease-in-out infinite reverse; }
+  .z-stap { animation: z-hobbel 0.6s ease-in-out infinite; }
+  .z-hart { animation: z-hart 2.4s ease-in-out infinite; }
+}
+@keyframes z-draai { to { transform: rotate(360deg); } }
+@keyframes z-hobbel { 50% { transform: translateY(-1.5px); } }
+@keyframes z-wieg { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
+@keyframes z-wiebel { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+@keyframes z-knipper { 50% { opacity: 0; } }
+@keyframes z-zon { from { transform: translateY(18px); } to { transform: translateY(-6px); } }
+@keyframes z-wapper { 50% { transform: skewY(-8deg) scaleX(.9); } }
+@keyframes z-stap { 0%, 100% { transform: rotate(-14deg); } 50% { transform: rotate(14deg); } }
+@keyframes z-hart { 0%, 70%, 100% { transform: scale(1); } 80% { transform: scale(1.25); } 90% { transform: scale(.95); } }
+
+/* ---------- rijders over de hele site ---------- */
+.rijderslaag { position: absolute; left: 0; top: 0; pointer-events: none; z-index: 5; overflow: visible; }
+.raakvlak { fill: none; stroke: transparent; stroke-width: 26; stroke-linecap: round; vector-effect: non-scaling-stroke; pointer-events: stroke; cursor: pointer; }
+.ridge .far, .ridge .trail, .fb-trail { pointer-events: stroke; cursor: pointer; }
+.ridge { pointer-events: none; }
+.ridge .raakvlak { pointer-events: stroke; }
+.ridge .far:hover, .ridge .far:hover + .raakvlak { opacity: 1; }
