@@ -86,14 +86,26 @@
       if (p[0] - laatsteTrail < 90) return;                                   // niet te dicht op elkaar
       laatsteTrail = p[0];
       // haarspeldbochten schuin de flank af
-      let tx = p[0] + kant * 6, ty = p[1] + 12, d = `M${tx.toFixed(1)},${ty.toFixed(1)}`;
-      const bodem = H - 36;
-      for (let k = 0; k < 5 && ty + 14 < bodem; k++) {
-        tx += kant * (k % 2 ? 4 : 22); ty += k % 2 ? 6 : 12;
-        d += ` L${tx.toFixed(1)},${ty.toFixed(1)}`;
-        if (k % 2 === 0) { tx -= kant * 14; ty += 8; d += ` L${tx.toFixed(1)},${ty.toFixed(1)}`; }
+      // haarspeldbochten: punten afwisselend links en rechts, steeds wat lager
+      let tx = p[0] + kant * 4, ty = p[1] + 12;
+      const tpts = [[tx, ty]], bodem = H - 40;
+      for (let k = 0; k < 6 && ty + 14 < bodem; k++) {
+        tx += kant * (k % 2 ? -26 : 34); ty += 12;
+        tpts.push([tx, ty]);
       }
-      el("path", { d, class: "p-trail" });
+      // ronde bochten, zodat de rijders er vloeiend doorheen gaan
+      let d = `M${tpts[0][0].toFixed(1)},${tpts[0][1].toFixed(1)}`;
+      for (let k = 1; k < tpts.length - 1; k++) {
+        const m = [(tpts[k][0] + tpts[k + 1][0]) / 2, (tpts[k][1] + tpts[k + 1][1]) / 2];
+        d += ` Q${tpts[k][0].toFixed(1)},${tpts[k][1].toFixed(1)} ${m[0].toFixed(1)},${m[1].toFixed(1)}`;
+      }
+      const lp = tpts[tpts.length - 1]; d += ` L${lp[0].toFixed(1)},${lp[1].toFixed(1)}`;
+      const tg = el("g", { class: "p-trailgroep", tabindex: "0", role: "button", "aria-label": "Rij samen deze trail af" });
+      el("path", { d, class: "p-trail-raak" }, tg);           // breed, onzichtbaar tikvlak
+      const tp = el("path", { d, class: "p-trail" }, tg);
+      const start = () => afdalen(tp);
+      tg.addEventListener("click", start);
+      tg.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); start(); } });
       kant = -kant;
     });
   }
@@ -152,6 +164,47 @@
     g.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); kies(i); } });
   });
   svg.insertBefore(van, items[0].g);
+
+  // 5b. Twee mountainbikers (Leyla en Jan) die samen een trail afrijden
+  const maakRijder = (cls) => {
+    const g = el("g", { class: "p-rijder " + cls, "aria-hidden": "true" });
+    el("circle", { cx: -6, cy: -3, r: 3, class: "r-wiel" }, g);   // achterwiel
+    el("circle", { cx: 6, cy: -3, r: 3, class: "r-wiel" }, g);    // voorwiel
+    el("path", { d: "M-6,-3 L-1,-3.5 L-2.5,-8 Z M-2.5,-8 L4,-8.5 L-1,-3.5 M4,-8.5 L6,-3 M4,-8.5 L4.6,-10.2", class: "r-kader" }, g); // kader en stuur
+    el("path", { d: "M-2.6,-9.6 L1.8,-13.6 L4.6,-10.2 M-2.6,-9.6 L1.2,-7.2 L-1,-3.8", class: "r-lijf" }, g); // romp, arm, been: staand in de pedalen
+    el("circle", { cx: 2.8, cy: -16, r: 2.2, class: "r-hoofd" }, g);  // helm
+    g.style.opacity = 0;
+    return g;
+  };
+  let rijders = null, afdaling = null;
+  function afdalen(trail) {
+    if (!rijders) rijders = [maakRijder("jan"), maakRijder("leyla")];
+    rijders.forEach((r) => svg.appendChild(r));                 // bovenaan tekenen
+    if (afdaling) cancelAnimationFrame(afdaling);
+    const len = trail.getTotalLength(), duur = 3000, afstand = 22;
+    const plaats = (r, l) => {
+      const a = trail.getPointAtLength(Math.max(0, Math.min(len, l)));
+      const b = trail.getPointAtLength(Math.max(0, Math.min(len, l + 4)));
+      const links = b.x < a.x;
+      let hoek = Math.atan2(b.y - a.y, Math.abs(b.x - a.x)) * 180 / Math.PI;
+      hoek = Math.max(-20, Math.min(20, hoek));
+      r.setAttribute("transform", `translate(${a.x.toFixed(1)},${a.y.toFixed(1)}) scale(${links ? -1.4 : 1.4},1.4) rotate(${hoek.toFixed(1)})`);
+    };
+    rijders.forEach((r) => { r.style.transition = "opacity .3s"; r.style.opacity = 1; });
+    if (traag) { plaats(rijders[0], len); plaats(rijders[1], len - afstand); return; }
+    const t0 = performance.now();
+    const loop = (nu) => {
+      const t = Math.min(1, (nu - t0) / duur);
+      const e = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;   // rustig vertrekken, rustig remmen
+      const l = e * (len + afstand);
+      plaats(rijders[0], l);
+      plaats(rijders[1], l - afstand);
+      if (t < 1) afdaling = requestAnimationFrame(loop);
+      else setTimeout(() => rijders.forEach((r) => (r.style.opacity = 0)), 1800);
+    };
+    plaats(rijders[0], 0); plaats(rijders[1], -afstand);
+    afdaling = requestAnimationFrame(loop);
+  }
 
   // 6. Rijden en kiezen
   let huidig = 0, doel = 0, anim = null, actief = 0;

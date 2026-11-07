@@ -1,4 +1,4 @@
-/* Stalen huwelijk · huisstijl
+/* Stalen huwelijk · huisstijl · versie 7nov-4 (met Ons pad)
    Staal en wit, Fredoka voor titels, Nunito voor tekst, stempelrood als enige knipoog. */
 :root {
   --wit: #ffffff;
@@ -97,6 +97,16 @@ p { margin: 0 0 1em; max-width: 62ch; }
 .p-pad { fill: none; stroke: var(--grafiet); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 0 10; }
 .p-jaar { font: 500 14px var(--display); fill: var(--staal-donker); }
 .p-trail { fill: none; stroke: var(--staal); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 0 6; }
+.p-trailgroep { cursor: pointer; outline: none; }
+.p-trail-raak { fill: none; stroke: transparent; stroke-width: 18; stroke-linecap: round; stroke-linejoin: round; }
+.p-trailgroep:hover .p-trail, .p-trailgroep:focus-visible .p-trail { stroke: var(--grafiet); }
+.p-rijder { pointer-events: none; }
+.p-rijder .r-wiel { fill: none; stroke: var(--grafiet); stroke-width: 1.1; }
+.p-rijder .r-kader, .p-rijder .r-lijf { fill: none; stroke: var(--grafiet); stroke-width: 1.1; stroke-linecap: round; stroke-linejoin: round; }
+.p-rijder .r-lijf { stroke-width: 1.6; }
+.p-rijder .r-hoofd { fill: var(--grafiet); }
+.p-rijder.leyla .r-wiel, .p-rijder.leyla .r-kader, .p-rijder.leyla .r-lijf { stroke: var(--stempelrood); }
+.p-rijder.leyla .r-hoofd { fill: var(--stempelrood); }
 .p-toekomst { fill: none; stroke: var(--staal); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 0 10; }
 .p-stip { fill: var(--staal-mist); stroke: var(--staal-donker); stroke-width: 2; }
 .p-halte { cursor: pointer; outline: none; }
