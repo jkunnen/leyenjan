@@ -1,4 +1,4 @@
-/* Stalen huwelijk · huisstijl · versie 7nov-10 (met Ons pad)
+/* Stalen huwelijk · huisstijl · versie 7nov-12 (met Ons pad)
    Staal en wit, Fredoka voor titels, Nunito voor tekst, stempelrood als enige knipoog. */
 :root {
   --wit: #ffffff;
@@ -139,8 +139,8 @@ p { margin: 0 0 1em; max-width: 62ch; }
 .p-licht { fill: var(--stempelrood); }
 .p-fiets path { fill: none; stroke: var(--grafiet); stroke-width: 1.2; stroke-linecap: round; }
 .p-fiets .p-band { fill: var(--grafiet); }
-.p-fiets.achter path { stroke: var(--staal); }
-.p-fiets.achter .p-band { fill: var(--staal); }
+.p-fiets.leyla path { stroke: var(--stempelrood); }
+.p-fiets.leyla .p-band { fill: var(--stempelrood); }
 .p-van-wiel { fill: var(--grafiet); stroke: var(--wit); stroke-width: 1.5; }
 
 /* de haltes als kaartjes */
@@ -247,7 +247,7 @@ h3.sub { font: 600 1.35rem/1.2 var(--display); margin: 0 0 14px; }
 .fb-ver { fill: none; stroke: var(--staal-licht); stroke-width: 2; stroke-linejoin: round; }
 .fb-trail { fill: none; stroke: var(--staal); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 0 9; }
 .footer-inhoud { padding: 0 max(20px, env(safe-area-inset-left, 0px)); }
-.footer-van { width: 130px; height: 63px; margin: -96px auto 14px; display: block; position: relative; }
+.footer-van { width: min(360px, 86vw); height: auto; margin: -92px auto 14px; display: block; position: relative; overflow: visible; }
 .footer .mark { margin: 0 auto 4px; font: 600 2.4rem/1 var(--display); color: var(--grafiet); }
 .footer p { margin-inline: auto; }
 

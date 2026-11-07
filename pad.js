@@ -144,8 +144,8 @@
       el("rect", { x: cx - 1.2, y: -12.5, width: 2.4, height: 8.2, rx: 1.2, class: "p-band" }, g);
       el("path", { d: `M${cx},-12.5 V-15.6 M${cx - 4.6},-16.2 Q${cx},-15 ${cx + 4.6},-16.2 M${cx - 1.6},-13.8 h3.2` }, g);
     };
-    if (aantal === 1) fiets(x0 - 8, "voor");
-    else { fiets(x0 - 10.6, "achter"); fiets(x0 - 7.2, "voor"); }
+    if (aantal === 1) fiets(x0 - 8, "jan");                    // de kleine auto: enkel de fiets van Jan
+    else { fiets(x0 - 10.6, "leyla"); fiets(x0 - 7.2, "jan"); } // rood is Leyla, grafiet is Jan
   };
   const voertuigen = {};
   // kleine auto (zoals een Opel Corsa): hatchback, één fiets
@@ -204,6 +204,10 @@
   let rijders = null, afdaling = null;
   function afdalen(trail) {
     if (!rijders) rijders = [maakRijder("jan"), maakRijder("leyla")];
+    rijders.sort((a, b) => (a.classList.contains("jan") ? -1 : 1));   // eerst terug: Jan, Leyla
+    // om beurten rijdt Leyla of Jan voorop (de beurt wordt gedeeld met de rest van de site)
+    window.__leylaVoorop = !window.__leylaVoorop;
+    if (window.__leylaVoorop) rijders.reverse();
     rijders.forEach((r) => svg.appendChild(r));                 // bovenaan tekenen
     if (afdaling) cancelAnimationFrame(afdaling);
     const len = trail.getTotalLength(), duur = 3000, afstand = 22;

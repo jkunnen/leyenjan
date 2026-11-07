@@ -73,15 +73,18 @@
       g.style.opacity = l < 0 || l > totaal ? 0 : 1;
     };
     const afstand = 13 * schaal;
+    // om beurten rijdt Leyla of Jan voorop, gedeeld met Ons pad
+    window.__leylaVoorop = !window.__leylaVoorop;
+    const [eerste, tweede] = window.__leylaVoorop ? [leyla, jan] : [jan, leyla];
     if (anim) cancelAnimationFrame(anim);
-    if (traag) { zet(jan, totaal); zet(leyla, totaal - afstand); setTimeout(() => { jan.style.opacity = leyla.style.opacity = 0; }, 2500); return; }
+    if (traag) { zet(eerste, totaal); zet(tweede, totaal - afstand); setTimeout(() => { jan.style.opacity = leyla.style.opacity = 0; }, 2500); return; }
     const duur = Math.min(6000, Math.max(1800, (totaal + afstand) / 0.28));   // ongeveer 280 px per seconde
     const t0 = performance.now();
     const loop = (nu) => {
       const t = Math.min(1, (nu - t0) / duur);
       const e = t < 0.15 ? (t / 0.15) * (t / 0.15) * 0.075 / 1 : t > 0.85 ? 1 - Math.pow((1 - t) / 0.15, 2) * 0.075 : 0.075 + (t - 0.15) / 0.7 * 0.85;
       const l = e * (totaal + afstand);
-      zet(jan, l); zet(leyla, l - afstand);
+      zet(eerste, l); zet(tweede, l - afstand);
       if (t < 1) anim = requestAnimationFrame(loop);
       else { anim = null; setTimeout(() => { jan.style.transition = leyla.style.transition = "opacity .4s"; jan.style.opacity = leyla.style.opacity = 0; setTimeout(() => { jan.style.transition = leyla.style.transition = ""; }, 500); }, 1200); }
     };
