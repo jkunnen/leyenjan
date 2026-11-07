@@ -83,12 +83,34 @@ p { margin: 0 0 1em; max-width: 62ch; }
 .aside { font: 400 1.05rem/1.3 var(--display); color: var(--staal-donker); }
 .lead { font-size: 1.15rem; }
 
-.timeline { list-style: none; margin: 0 0 32px; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); border-top: 2px solid var(--grafiet); }
-.timeline li { padding: 12px 12px 0 0; display: grid; gap: 2px; }
-.timeline li + li { padding-left: 12px; border-left: 1px solid var(--staal-licht); }
-.t-date { font: 600 clamp(1.05rem, 3.2vw, 1.5rem)/1 var(--display); font-variant-numeric: tabular-nums; }
-.t-what { color: var(--staal-donker); font-size: 0.95rem; }
-.timeline li:last-child .t-date { color: var(--stempelrood); }
+/* tijdlijn: een trail van stippen langs de linkerkant */
+.timeline { list-style: none; margin: 0 0 28px; padding: 0; display: grid; gap: 22px; position: relative; }
+.timeline::before { content: ""; position: absolute; left: 7px; top: 10px; bottom: 10px; border-left: 3px dotted var(--staal); }
+.timeline li { position: relative; padding-left: 36px; display: grid; gap: 2px; }
+.timeline li::before { content: ""; position: absolute; left: 0; top: 4px; width: 17px; height: 17px; border-radius: 50%; background: var(--wit); border: 3px solid var(--grafiet); }
+.t-date { font: 600 clamp(1.2rem, 3.4vw, 1.5rem)/1.1 var(--display); font-variant-numeric: tabular-nums; }
+.t-what { color: var(--grafiet); }
+.timeline li.now::before { background: var(--stempelrood); border-color: var(--stempelrood); }
+.timeline li.now .t-date { color: var(--stempelrood); }
+
+.section.tinted { background: var(--staal-mist); }
+
+/* foto: breed, rechte hoeken zoals gesneden staal */
+.photo { max-width: 980px; margin: 0 auto clamp(32px, 5vw, 56px); }
+.photo img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; }
+.photo figcaption { margin-top: 10px; font: 400 0.95rem/1.2 var(--display); color: var(--staal-donker); }
+@media (min-width: 900px) { .photo img { aspect-ratio: 16 / 9; object-position: 50% 62%; } }
+
+/* contact */
+.contact { margin-top: 40px; padding-top: 24px; border-top: 2px solid var(--grafiet); }
+.contact h3 { margin-bottom: 14px; }
+.contact-cards { display: flex; flex-wrap: wrap; gap: 12px; }
+.contact-card { display: grid; gap: 8px; padding: 16px 18px; background: var(--staal-mist); border-radius: 4px; min-width: min(100%, 260px); flex: 1 1 260px; }
+.contact-card .c-naam { font: 600 1.25rem/1 var(--display); }
+.contact-card .c-nr { font-variant-numeric: tabular-nums; }
+.contact-card .c-links { display: flex; gap: 8px; flex-wrap: wrap; }
+.contact-card .c-links a { text-decoration: none; font: 600 0.95rem/1 var(--display); padding: 9px 14px; border-radius: 4px; background: var(--grafiet); color: var(--wit); }
+.contact-card .c-links a.alt { background: transparent; color: var(--grafiet); border: 1px solid var(--grafiet); }
 
 .facts { margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 0 48px; }
 .facts div { padding: 18px 0; border-top: 1px solid var(--staal-licht); min-width: 0; }
