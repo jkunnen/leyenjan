@@ -88,7 +88,7 @@
   el("line", { x1: X0 - 20, x2: X1 + 15, y1: y(3.4), y2: y(3.4), class: "p-raster" });
   const tPlateau = el("text", { x: X0 - 16, y: y(3.4) - 10, class: "p-as" });
   const tal = (window.T || ((nl) => nl));
-  const vertaalPlateau = () => (tPlateau.textContent = tal("*hoog plateau", "*haut plateau"));
+  const vertaalPlateau = () => (tPlateau.textContent = tal("hoog plateau", "haut plateau"));
   vertaalPlateau();
   // Trails, in drie fases (in de lijst aangeduid met data-trails op de halte waar een fase begint):
   //   klim  : Jan rijdt alleen bergop, dat deed hij altijd al
@@ -141,7 +141,7 @@
   el("path", { d: dToekomst, class: "p-toekomst" });
   const eind = alles[alles.length - 1];
   const tVerder = el("text", { x: eind[0] - 4, y: eind[1] - 16, "text-anchor": "end", class: "p-as" });
-  const vertaalVerder = () => (tVerder.textContent = tal("*en verder", "*et plus loin"));
+  const vertaalVerder = () => (tVerder.textContent = tal("en verder", "et plus loin"));
   vertaalVerder();
   const L = pad.getTotalLength();
   const lengteBijX = (tx) => {
@@ -421,7 +421,7 @@
         : s === "solo" ? tal("Jan rijdt naar beneden", "Jan descend la piste")
         : tal("Rij samen deze trail af", "Descendez cette piste ensemble"));
     });
-    voetnoot.textContent = tal("*voor altijd in inkt en in ons hart", "*à jamais dans l'encre et dans nos cœurs");
+    voetnoot.textContent = tal("voor altijd in inkt en in ons hart", "à jamais dans l'encre et dans nos cœurs");
     vertaalPlateau(); vertaalVerder();
   }
   vertaal();
