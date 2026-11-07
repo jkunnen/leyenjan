@@ -32,6 +32,7 @@
     tekst: (li.querySelector(".h-tekst") || {}).textContent || "",
     stil: li.classList.contains("stil"),
     voertuig: li.dataset.voertuig || "",
+    trails: li.dataset.trails || "",
     now: li.classList.contains("now")
   }));
   const n = items.length;
@@ -74,23 +75,37 @@
   // 3. Tekenen: grond, plateau-lijn, pad, en de weg verder
   el("path", { d: `${dVerleden}${segs.slice(knip).join("")} L${X1 + 15},${H} L${X0 - 20},${H} Z`, class: "p-grond" });
   el("line", { x1: X0 - 20, x2: X1 + 15, y1: y(3.4), y2: y(3.4), class: "p-raster" });
-  el("text", { x: X0 - 16, y: y(3.4) - 10, class: "p-as" }).textContent = "*hoog plateau";
-  // vanaf 2023: trails die van de toppen naar beneden lopen, waar we samen afrijden
-  const eersteTrailX = (items.find((it) => parseInt(it.jaar, 10) >= 2023) || {}).x;
-  if (eersteTrailX !== undefined) {
-    let kant = 1, laatsteTrail = -1e9;
+  const tPlateau = el("text", { x: X0 - 16, y: y(3.4) - 10, class: "p-as" });
+  const tal = (window.T || ((nl) => nl));
+  const vertaalPlateau = () => (tPlateau.textContent = tal("*hoog plateau", "*haut plateau"));
+  vertaalPlateau();
+  // Trails, in drie fases (in de lijst aangeduid met data-trails op de halte waar een fase begint):
+  //   klim  : Jan rijdt alleen bergop, dat deed hij altijd al
+  //   solo  : Jan rijdt ook bergaf, nog alleen
+  //   samen : Leyla en Jan samen bergaf: eerst kort en traag, dan langer en sneller
+  const fases = items.filter((it) => it.trails).map((it) => ({ x: it.x, soort: it.trails }));
+  const faseBij = (x) => { let s = null; fases.forEach((f) => { if (x >= f.x - 1) s = f.soort; }); return s; };
+  if (fases.length) {
+    let kant = 1, laatsteTrail = -1e9, nSamen = 0;
     alles.forEach((p, i) => {
       const v = alles[i - 1], w = alles[i + 1];
-      if (!v || !w || p[0] < eersteTrailX - 1) return;
-      if (!(p[1] <= v[1] && p[1] <= w[1])) return;        // alleen op een top (kleinere y = hoger)
-      if (items.some((it) => it.stil && Math.abs(it.x - p[0]) < 1)) return; // niet vanaf een stil moment
-      if (p[0] - laatsteTrail < 90) return;                                   // niet te dicht op elkaar
+      if (!v || !w) return;
+      const soort = faseBij(p[0]);
+      if (!soort) return;
+      if (items.some((it) => it.stil && Math.abs(it.x - p[0]) < 30)) return; // niet bij een stil moment
+      const top = p[1] <= v[1] && p[1] <= w[1];
+      // klim en solo: alleen op toppen. samen: ook onderweg, steeds vaker
+      if (soort === "klim" && !top) return;
+      if (p[0] - laatsteTrail < (soort === "samen" ? 62 : 80)) return;
       laatsteTrail = p[0];
-      // haarspeldbochten schuin de flank af
+      // hoe verder we samen zijn, hoe langer de trail en hoe sneller we rijden
+      const bochten = soort === "samen" ? Math.min(7, 2 + nSamen) : 3;
+      const snelheid = soort === "klim" ? 0.35 : soort === "solo" ? 0.8 : 0.55 + nSamen * 0.3;
+      if (soort === "samen") nSamen++;
       // haarspeldbochten: punten afwisselend links en rechts, steeds wat lager
       let tx = p[0] + kant * 4, ty = p[1] + 12;
       const tpts = [[tx, ty]], bodem = H - 40;
-      for (let k = 0; k < 6 && ty + 14 < bodem; k++) {
+      for (let k = 0; k < bochten && ty + 14 < bodem; k++) {
         tx += kant * (k % 2 ? -26 : 34); ty += 12;
         tpts.push([tx, ty]);
       }
@@ -101,10 +116,11 @@
         d += ` Q${tpts[k][0].toFixed(1)},${tpts[k][1].toFixed(1)} ${m[0].toFixed(1)},${m[1].toFixed(1)}`;
       }
       const lp = tpts[tpts.length - 1]; d += ` L${lp[0].toFixed(1)},${lp[1].toFixed(1)}`;
-      const tg = el("g", { class: "p-trailgroep", tabindex: "0", role: "button", "aria-label": "Rij samen deze trail af" });
+      const tg = el("g", { class: "p-trailgroep " + soort, tabindex: "0", role: "button" });
+      tg.dataset.soort = soort;
       el("path", { d, class: "p-trail-raak" }, tg);           // breed, onzichtbaar tikvlak
       const tp = el("path", { d, class: "p-trail" }, tg);
-      const start = () => afdalen(tp);
+      const start = () => afdalen(tp, soort, snelheid);
       tg.addEventListener("click", start);
       tg.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); start(); } });
       kant = -kant;
@@ -113,7 +129,9 @@
   const pad = el("path", { d: dVerleden, class: "p-pad" });
   el("path", { d: dToekomst, class: "p-toekomst" });
   const eind = alles[alles.length - 1];
-  el("text", { x: eind[0] - 4, y: eind[1] - 16, "text-anchor": "end", class: "p-as" }).textContent = "*en verder";
+  const tVerder = el("text", { x: eind[0] - 4, y: eind[1] - 16, "text-anchor": "end", class: "p-as" });
+  const vertaalVerder = () => (tVerder.textContent = tal("*en verder", "*et plus loin"));
+  vertaalVerder();
   const L = pad.getTotalLength();
   const lengteBijX = (tx) => {
     let lo = 0, hi = L;
@@ -202,36 +220,42 @@
     return g;
   };
   let rijders = null, afdaling = null;
-  function afdalen(trail) {
-    if (!rijders) rijders = [maakRijder("jan"), maakRijder("leyla")];
-    rijders.sort((a, b) => (a.classList.contains("jan") ? -1 : 1));   // eerst terug: Jan, Leyla
-    // om beurten rijdt Leyla of Jan voorop (de beurt wordt gedeeld met de rest van de site)
-    window.__leylaVoorop = !window.__leylaVoorop;
-    if (window.__leylaVoorop) rijders.reverse();
-    rijders.forEach((r) => svg.appendChild(r));                 // bovenaan tekenen
+  function afdalen(trail, soort, snelheid) {
+    if (!rijders) rijders = { jan: maakRijder("jan"), leyla: maakRijder("leyla") };
     if (afdaling) cancelAnimationFrame(afdaling);
-    const len = trail.getTotalLength(), duur = 3000, afstand = 22;
+    // wie rijdt er mee? klim en solo: Jan alleen. samen: om beurten Leyla of Jan voorop
+    let ploeg;
+    if (soort === "samen") {
+      window.__leylaVoorop = !window.__leylaVoorop;
+      ploeg = window.__leylaVoorop ? [rijders.leyla, rijders.jan] : [rijders.jan, rijders.leyla];
+    } else ploeg = [rijders.jan];
+    Object.values(rijders).forEach((r) => { r.style.transition = ""; r.style.opacity = 0; });
+    ploeg.forEach((r) => svg.appendChild(r));                   // bovenaan tekenen
+    const len = trail.getTotalLength(), afstand = 22;
+    const bergop = soort === "klim";
+    const duur = Math.max(900, (len + afstand) / (snelheid || 0.6) * 10);  // snelheid in px per 10 ms
     const plaats = (r, l) => {
-      const a = trail.getPointAtLength(Math.max(0, Math.min(len, l)));
-      const b = trail.getPointAtLength(Math.max(0, Math.min(len, l + 4)));
+      // bergop rijden we de trail van onder naar boven
+      const pos = bergop ? len - l : l, vooruit = bergop ? -4 : 4;
+      const a = trail.getPointAtLength(Math.max(0, Math.min(len, pos)));
+      const b = trail.getPointAtLength(Math.max(0, Math.min(len, pos + vooruit)));
       const links = b.x < a.x;
       let hoek = Math.atan2(b.y - a.y, Math.abs(b.x - a.x)) * 180 / Math.PI;
       hoek = Math.max(-20, Math.min(20, hoek));
       r.setAttribute("transform", `translate(${a.x.toFixed(1)},${a.y.toFixed(1)}) scale(${links ? -1.4 : 1.4},1.4) rotate(${hoek.toFixed(1)})`);
+      r.style.opacity = l < 0 || l > len ? 0 : 1;
     };
-    rijders.forEach((r) => { r.style.transition = "opacity .3s"; r.style.opacity = 1; });
-    if (traag) { plaats(rijders[0], len); plaats(rijders[1], len - afstand); return; }
+    if (traag) { ploeg.forEach((r, k) => plaats(r, len - k * afstand)); setTimeout(() => ploeg.forEach((r) => (r.style.opacity = 0)), 2500); return; }
     const t0 = performance.now();
     const loop = (nu) => {
       const t = Math.min(1, (nu - t0) / duur);
-      const e = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;   // rustig vertrekken, rustig remmen
-      const l = e * (len + afstand);
-      plaats(rijders[0], l);
-      plaats(rijders[1], l - afstand);
+      const e = bergop ? t : (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);   // bergop: rustig gelijkmatig trappen
+      const l = e * (len + afstand * (ploeg.length - 1));
+      ploeg.forEach((r, k) => plaats(r, l - k * afstand));
       if (t < 1) afdaling = requestAnimationFrame(loop);
-      else setTimeout(() => rijders.forEach((r) => (r.style.opacity = 0)), 1800);
+      else setTimeout(() => ploeg.forEach((r) => { r.style.transition = "opacity .4s"; r.style.opacity = 0; }), 1500);
     };
-    plaats(rijders[0], 0); plaats(rijders[1], -afstand);
+    ploeg.forEach((r, k) => plaats(r, -k * afstand));
     afdaling = requestAnimationFrame(loop);
   }
 
@@ -264,7 +288,7 @@
   const vorige = document.getElementById("pad-vorige"), volgende = document.getElementById("pad-volgende");
   // bij momenten van afscheid: een stille voetnoot
   const voetnoot = document.createElement("span");
-  voetnoot.className = "h-voetnoot"; voetnoot.textContent = "*voor altijd in inkt en in ons hart"; voetnoot.hidden = true;
+  voetnoot.className = "h-voetnoot"; voetnoot.hidden = true;
   kaart.querySelector(".pad-tekst").appendChild(voetnoot);
   function kies(i) {
     actief = i; const it = items[i];
@@ -279,6 +303,26 @@
   }
   vorige.addEventListener("click", () => actief > 0 && kies(actief - 1));
   volgende.addEventListener("click", () => actief < n - 1 && kies(actief + 1));
+
+  // teksten in de juiste taal zetten (bij het laden en bij elke taalwissel)
+  function vertaal() {
+    items.forEach((it, i) => {
+      it.datum = (it.li.querySelector(".h-datum") || {}).textContent || "";
+      it.titel = (it.li.querySelector(".h-titel") || {}).textContent || "";
+      it.tekst = (it.li.querySelector(".h-tekst") || {}).textContent || "";
+      if (it.g) it.g.setAttribute("aria-label", `${i + 1}. ${it.titel}`);
+    });
+    svg.querySelectorAll(".p-trailgroep").forEach((g) => {
+      const s = g.dataset.soort;
+      g.setAttribute("aria-label", s === "klim" ? tal("Jan klimt naar boven", "Jan grimpe vers le sommet")
+        : s === "solo" ? tal("Jan rijdt naar beneden", "Jan descend la piste")
+        : tal("Rij samen deze trail af", "Descendez cette piste ensemble"));
+    });
+    voetnoot.textContent = tal("*voor altijd in inkt en in ons hart", "*à jamais dans l'encre et dans nos cœurs");
+    vertaalPlateau(); vertaalVerder();
+  }
+  vertaal();
+  window.addEventListener("taalwissel", () => { vertaal(); kies(actief); });
 
   wrap.hidden = false;
   lijst.hidden = true;   // de lijst blijft in de code als bron en voor wie geen JavaScript heeft

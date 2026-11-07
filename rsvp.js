@@ -1,4 +1,4 @@
-// rsvp.js · versie 7nov-10 (gekoppeld aan Google Form, contactkaartjes, slapen, antwoord bekijken en aanpassen)
+// rsvp.js · versie 7nov-14 (tweetalig) (gekoppeld aan Google Form, contactkaartjes, slapen, antwoord bekijken en aanpassen)
 // ---------------------------------------------------------------
 // Inschrijvingen gaan naar jullie Google Form (en dus de sheet).
 // FORM_ACTION = het adres waar antwoorden naartoe gaan ("viewform" vervangen
@@ -24,7 +24,10 @@ document.querySelectorAll(".contact-card").forEach((card) => {
   const mooi = "+" + d[0] + " " + d.slice(1).join(" ");    // +32 497 85 29 38
   card.innerHTML =
     '<span class="c-naam"></span><span class="c-nr"></span>' +
-    '<span class="c-links"><a class="wa" target="_blank" rel="noopener">WhatsApp</a><a class="alt tel">Bellen</a></span>';
+    '<span class="c-links"><a class="wa" target="_blank" rel="noopener">WhatsApp</a><a class="alt tel"></a></span>';
+  const bel = card.querySelector(".tel");
+  const vertaalBel = () => (bel.textContent = (window.T || ((nl) => nl))("Bellen", "Appeler"));
+  vertaalBel(); window.addEventListener("taalwissel", vertaalBel);
   card.querySelector(".c-naam").textContent = card.dataset.naam;
   card.querySelector(".c-nr").textContent = mooi;
   card.querySelector(".wa").href = "https://wa.me/" + intl;
@@ -36,10 +39,14 @@ document.querySelectorAll(".contact-card").forEach((card) => {
   const el = document.getElementById("countdown");
   if (!el) return;
   const feest = new Date("2027-07-02T00:00:00+02:00");
-  const dagen = Math.ceil((feest - new Date()) / 86400000);
-  if (dagen > 1) el.textContent = "vrijdag 2 juli 2027 · nog " + dagen + " dagen";
-  else if (dagen === 1) el.textContent = "morgen is het zover!";
-  else if (dagen === 0) el.textContent = "vandaag is het feest!";
+  const toon = () => {
+    const T = window.T || ((nl) => nl);
+    const dagen = Math.ceil((feest - new Date()) / 86400000);
+    if (dagen > 1) el.textContent = T("vrijdag 2 juli 2027 · nog " + dagen + " dagen", "vendredi 2 juillet 2027 · encore " + dagen + " jours");
+    else if (dagen === 1) el.textContent = T("morgen is het zover!", "c'est demain !");
+    else if (dagen === 0) el.textContent = T("vandaag is het feest!", "c'est aujourd'hui la fête !");
+  };
+  toon(); window.addEventListener("taalwissel", toon);
 })();
 
 // Inschrijvingsformulier
@@ -50,7 +57,11 @@ document.querySelectorAll(".contact-card").forEach((card) => {
   if (!form) return;
   const SLEUTEL = "leyenjan-antwoord";
   const VELDEN = ["naam", "komt", "volwassenen", "kinderen", "dieet", "slapen", "bericht"];
-  const LABELS = { naam: "Naam", komt: "Komen jullie?", volwassenen: "Volwassenen", kinderen: "Kinderen", dieet: "Dieetwensen", slapen: "Blijven slapen", bericht: "Berichtje" };
+  const T = (nl, fr) => (window.T ? window.T(nl, fr) : nl);
+  const LABELS = () => ({ naam: T("Naam", "Nom"), komt: T("Komen jullie?", "Vous venez ?"), volwassenen: T("Volwassenen", "Adultes"), kinderen: T("Kinderen", "Enfants"), dieet: T("Dieetwensen", "Régime"), slapen: T("Blijven slapen", "Dormir sur place"), bericht: T("Berichtje", "Petit mot") });
+  // de antwoorden zelf blijven in het Nederlands (voor de sheet), maar we tonen ze in de gekozen taal
+  const WAARDE_FR = { "Ja": "Oui", "Nee": "Non", "Nog niet zeker": "Pas encore sûr", "Camionette of camper": "Camionnette ou camping-car", "Tent": "Tente" };
+  const toonWaarde = (v) => T(v, WAARDE_FR[v] || v);
 
   // kopie in de eigen browser (kan ontbreken of geblokkeerd zijn: dan gewoon zonder)
   const lees = () => { try { return JSON.parse(localStorage.getItem(SLEUTEL) || "null"); } catch (e) { return null; } };
@@ -63,11 +74,11 @@ document.querySelectorAll(".contact-card").forEach((card) => {
     VELDEN.forEach((k) => {
       const v = a.waarden[k];
       if (v === undefined || v === "") return;
-      const dt = document.createElement("dt"); dt.textContent = LABELS[k];
-      const dd = document.createElement("dd"); dd.textContent = v;
+      const dt = document.createElement("dt"); dt.textContent = LABELS()[k];
+      const dd = document.createElement("dd"); dd.textContent = toonWaarde(v);
       lijst.append(dt, dd);
     });
-    document.getElementById("ma-datum").textContent = new Date(a.wanneer).toLocaleDateString("nl-BE", { day: "numeric", month: "long", year: "numeric" });
+    document.getElementById("ma-datum").textContent = new Date(a.wanneer).toLocaleDateString(T("nl-BE", "fr-BE"), { day: "numeric", month: "long", year: "numeric" });
     kaart.hidden = false;
     form.hidden = true;
   }
@@ -86,7 +97,7 @@ document.querySelectorAll(".contact-card").forEach((card) => {
   if (knop) knop.addEventListener("click", () => {
     const a = lees(); if (a) vulIn(a);
     kaart.hidden = true; form.hidden = false;
-    form.querySelector("button[type=submit]").textContent = "Aanpassing versturen";
+    const knopV = form.querySelector("button[type=submit]"); knopV.dataset.aanpassing = "1"; knopV.textContent = T("Aanpassing versturen", "Envoyer la modification");
     form.elements.naam.focus();
   });
 
@@ -97,13 +108,13 @@ document.querySelectorAll(".contact-card").forEach((card) => {
     if (data.get("website")) return;                   // onzichtbaar veld: alleen bots vullen dit in
 
     if (!data.get("naam") || !String(data.get("naam")).trim()) {
-      return fout("Vul je naam in, dan weten we wie er komt.");
+      return fout(T("Vul je naam in, dan weten we wie er komt.", "Indiquez votre nom, pour qu'on sache qui vient."));
     }
     if (!data.get("komt")) {
-      return fout("Kies of je erbij bent.");
+      return fout(T("Kies of je erbij bent.", "Dites-nous si vous venez."));
     }
     if (!FORM_ACTION) {
-      return fout("Inschrijven kan binnenkort. Stuur ons intussen een berichtje.");
+      return fout(T("Inschrijven kan binnenkort. Stuur ons intussen een berichtje.", "L'inscription ouvre bientôt. Envoyez-nous un message en attendant."));
     }
 
     const waarden = {};
@@ -117,7 +128,7 @@ document.querySelectorAll(".contact-card").forEach((card) => {
 
     const btn = form.querySelector("button[type=submit]");
     btn.disabled = true;
-    status.textContent = "Even versturen…";
+    status.textContent = T("Even versturen…", "Envoi en cours…");
     try {
       await fetch(FORM_ACTION, { method: "POST", mode: "no-cors", body });
       const a = { wanneer: Date.now(), waarden };
@@ -127,9 +138,10 @@ document.querySelectorAll(".contact-card").forEach((card) => {
       status.textContent = "";
       let bedankt = kaart.querySelector(".bedankt");          // maar één bedankje tonen
       if (!bedankt) { bedankt = document.createElement("p"); bedankt.className = "status bedankt"; kaart.prepend(bedankt); }
-      bedankt.textContent = waarden.komt === "Nee" ? "Jammer! Bedankt om het te laten weten." : "Top, we hebben je antwoord. Tot 2 juli!";
+      bedankt.dataset.komt = waarden.komt;
+      bedankt.textContent = waarden.komt === "Nee" ? T("Jammer! Bedankt om het te laten weten.", "Dommage ! Merci de nous avoir prévenus.") : T("Top, we hebben je antwoord. Tot 2 juli!", "Super, nous avons votre réponse. À bientôt, le 2 juillet !");
     } catch (err) {
-      fout("Versturen lukte niet. Probeer opnieuw of stuur ons een berichtje.");
+      fout(T("Versturen lukte niet. Probeer opnieuw of stuur ons een berichtje.", "L'envoi n'a pas fonctionné. Réessayez ou envoyez-nous un message."));
     } finally {
       btn.disabled = false;
     }
@@ -139,4 +151,15 @@ document.querySelectorAll(".contact-card").forEach((card) => {
     status.textContent = msg;
     status.className = "status fout";
   }
+
+  // bij een taalwissel: overzicht, bedankje en knop opnieuw in de juiste taal
+  window.addEventListener("taalwissel", () => {
+    const a = lees();
+    if (a && !kaart.hidden) toonAntwoord(a);
+    const b = kaart && kaart.querySelector(".bedankt");
+    if (b) b.textContent = b.dataset.komt === "Nee" ? T("Jammer! Bedankt om het te laten weten.", "Dommage ! Merci de nous avoir prévenus.") : T("Top, we hebben je antwoord. Tot 2 juli!", "Super, nous avons votre réponse. À bientôt, le 2 juillet !");
+    const knopV = form.querySelector("button[type=submit]");
+    if (knopV.dataset.aanpassing) knopV.textContent = T("Aanpassing versturen", "Envoyer la modification");
+    status.textContent = ""; status.className = "status";
+  });
 })();

@@ -1,4 +1,4 @@
-/* Stalen huwelijk · huisstijl · versie 7nov-12 (met Ons pad)
+/* Stalen huwelijk · huisstijl · versie 7nov-14 (met Ons pad)
    Staal en wit, Fredoka voor titels, Nunito voor tekst, stempelrood als enige knipoog. */
 :root {
   --wit: #ffffff;
@@ -306,3 +306,9 @@ h3.sub { font: 600 1.35rem/1.2 var(--display); margin: 0 0 14px; }
 .ridge { pointer-events: none; }
 .ridge .raakvlak { pointer-events: stroke; }
 .ridge .far:hover, .ridge .far:hover + .raakvlak { opacity: 1; }
+
+/* ---------- taalkeuze ---------- */
+.taalkeuze { display: inline-flex; gap: 0; margin-left: 10px; border: 1.5px solid var(--wit); border-radius: 4px; overflow: hidden; }
+.taalkeuze button { font: 600 .85rem/1 var(--display); letter-spacing: .04em; background: transparent; color: var(--wit); border: 0; padding: 6px 9px; cursor: pointer; }
+.taalkeuze button[aria-pressed="true"] { background: var(--wit); color: var(--grafiet); }
+.taalkeuze button:focus-visible { outline: 3px solid var(--stempelrood); outline-offset: -3px; }

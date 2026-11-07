@@ -13,26 +13,34 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Nunito:wght@400;600;700&display=swap">
-<link rel="stylesheet" href="style.css?v=7nov-12">
+<link rel="stylesheet" href="style.css?v=7nov-14">
 </head>
 <body>
+
+<!-- ============ TALEN ============
+     Elke tekst staat in het Nederlands. De Franse versie staat erbij in data-fr="…".
+     Pas je een tekst aan, pas dan ook data-fr aan. Een nieuwe tekst zonder data-fr blijft in het Frans gewoon Nederlands. -->
 
 <!-- ============ WELKOM ============ -->
 <header class="hero" id="welkom">
   <nav class="nav" aria-label="Menu">
-    <a href="#verhaal">ons pad</a>
-    <a href="#praktisch">praktisch</a>
-    <a href="#inschrijven">inschrijven</a>
-    <a href="#nieuws">nieuws</a>
+    <a href="#verhaal" data-fr="notre chemin">ons pad</a>
+    <a href="#praktisch" data-fr="infos pratiques">praktisch</a>
+    <a href="#inschrijven" data-fr="inscription">inschrijven</a>
+    <a href="#nieuws" data-fr="nouvelles">nieuws</a>
+    <span class="taalkeuze" role="group" aria-label="Taal / Langue">
+      <button type="button" data-taal="nl" lang="nl" aria-label="Nederlands">NL</button>
+      <button type="button" data-taal="fr" lang="fr" aria-label="Français">FR</button>
+    </span>
   </nav>
 
   <p class="corner tl">*this time<br>for real!</p>
-  <p class="corner tr">11 jaar getrouwd<br>20 jaar liefde</p>
+  <p class="corner tr" data-fr="11 ans de mariage&lt;br&gt;20 ans d&#x27;amour">11 jaar getrouwd<br>20 jaar liefde</p>
 
   <div class="hero-main">
     <p class="save">save the date</p>
     <h1 class="date">02.07.27</h1>
-    <p class="countdown" id="countdown">vrijdag 2 juli 2027</p>
+    <p class="countdown" id="countdown" data-fr="vendredi 2 juillet 2027">vrijdag 2 juli 2027</p>
   </div>
 
   <p class="corner bl">steel marriage</p>
@@ -56,117 +64,118 @@
      data-daarna = (optioneel) een tweede hoogte vlak erna, voor een moment dat snel omslaat
      class="stil" = een moment van afscheid: rustig aangeduid
      data-voertuig = vanaf deze halte rijden we met: auto, ivette of caddy
+     data-trails = vanaf deze halte: klim (Jan bergop), solo (Jan bergaf) of samen (Leyla en Jan)
      Een halte toevoegen? Kopieer een <li>, pas aan, en zet hem op de juiste plek. -->
 <section class="section" id="verhaal">
   <div class="wrap">
     <p class="kicker">leyla &amp; jan</p>
-    <h2>Ons pad</h2>
-    <p class="lead">Twintig jaar samen onderweg. Hoogtes, mindere hoogtes, en altijd veel liefde. Op weg naar een hoog plateau.</p>
+    <h2 data-fr="Notre chemin">Ons pad</h2>
+    <p class="lead" data-fr="Vingt ans de route ensemble. Des hauts, des moins hauts, et toujours beaucoup d&#x27;amour. En route vers un haut plateau.">Twintig jaar samen onderweg. Hoogtes, mindere hoogtes, en altijd veel liefde. Op weg naar een hoog plateau.</p>
 
     <div class="pad" id="pad" hidden>
       <div class="pad-scroll">
         <svg class="pad-svg" id="pad-svg" viewBox="0 0 1000 360" role="img" aria-labelledby="pad-titel">
-          <title id="pad-titel">Ons pad als hoogteprofiel: van 2007 langzaam stijgend naar een hoog plateau</title>
+          <title id="pad-titel" data-fr="Notre chemin en profil d&#x27;altitude : depuis 2007, une lente montée vers un haut plateau">Ons pad als hoogteprofiel: van 2007 langzaam stijgend naar een hoog plateau</title>
         </svg>
       </div>
-      <p class="pad-hint"><span class="hint-gsm">*swipe over het pad, tik op een halte of rij een trail af</span><span class="hint-pc">*tik op een halte, of klik op een trail en rij samen naar beneden</span></p>
+      <p class="pad-hint"><span class="hint-gsm" data-fr="*glissez sur le chemin, touchez une étape ou descendez une piste">*swipe over het pad, tik op een halte of rij een trail af</span><span class="hint-pc" data-fr="*cliquez sur une étape, ou sur une piste pour la descendre ensemble">*tik op een halte, of klik op een trail en rij samen naar beneden</span></p>
       <div class="pad-kaart" id="pad-kaart" aria-live="polite">
-        <button class="pad-nav" id="pad-vorige" type="button" aria-label="Vorige halte">‹</button>
+        <button class="pad-nav" id="pad-vorige" type="button" aria-label="Vorige halte" data-fr-aria-label="Étape précédente">‹</button>
         <div class="pad-tekst"><span class="h-datum"></span><span class="h-titel"></span><span class="h-tekst"></span></div>
-        <button class="pad-nav" id="pad-volgende" type="button" aria-label="Volgende halte">›</button>
+        <button class="pad-nav" id="pad-volgende" type="button" aria-label="Volgende halte" data-fr-aria-label="Étape suivante">›</button>
       </div>
     </div>
 
     <ol class="haltes" id="haltes">
-      <li data-jaar="2007" data-hoogte="0.6" data-voertuig="auto">
+      <li data-jaar="2007" data-hoogte="0.6" data-voertuig="auto" data-trails="klim">
         <span class="h-datum">2007</span>
-        <span class="h-titel">Twee wegen, één pad</span>
-        <span class="h-tekst">Zo begon het.</span>
+        <span class="h-titel" data-fr="Deux routes, un chemin">Twee wegen, één pad</span>
+        <span class="h-tekst" data-fr="C&#x27;est ainsi que tout a commencé.">Zo begon het.</span>
       </li>
       <li class="stil" data-jaar="2011" data-hoogte="0.3">
         <span class="h-datum">2011</span>
-        <span class="h-titel">Afscheid</span>
-        <span class="h-tekst">Sommige mensen blijven, ook als ze gaan.</span>
+        <span class="h-titel" data-fr="Adieu">Afscheid</span>
+        <span class="h-tekst" data-fr="Certaines personnes restent, même quand elles partent.">Sommige mensen blijven, ook als ze gaan.</span>
       </li>
       <li data-jaar="2014" data-hoogte="1.2">
         <span class="h-datum">16.04.2014</span>
-        <span class="h-titel">De vraag</span>
-        <span class="h-tekst">Op één knie. Zij zei ja.</span>
+        <span class="h-titel" data-fr="La question">De vraag</span>
+        <span class="h-tekst" data-fr="Un genou à terre. Elle a dit oui.">Op één knie. Zij zei ja.</span>
       </li>
       <li data-jaar="2015" data-hoogte="1.5">
-        <span class="h-datum">najaar 2015</span>
-        <span class="h-titel">Ir. &amp; Dr.</span>
-        <span class="h-tekst">Twee diploma's, één richting: vooruit.</span>
+        <span class="h-datum" data-fr="automne 2015">najaar 2015</span>
+        <span class="h-titel">Ir.-arch. &amp; Dr.</span>
+        <span class="h-tekst" data-fr="Deux diplômes, une seule direction : en avant.">Twee diploma's, één richting: vooruit.</span>
       </li>
       <li data-jaar="2015" data-hoogte="2">
         <span class="h-datum">12.2015</span>
-        <span class="h-titel">Aan de andere kant van de wereld</span>
-        <span class="h-tekst">Drie maanden op avontuur, en ons hart bleef daar achter. De eerste van drie keer.</span>
+        <span class="h-titel" data-fr="À l&#x27;autre bout du monde">Aan de andere kant van de wereld</span>
+        <span class="h-tekst" data-fr="Trois mois d&#x27;aventure, et notre cœur y est resté. La première de trois fois.">Drie maanden op avontuur, en ons hart bleef daar achter. De eerste van drie keer.</span>
       </li>
       <li data-jaar="2016" data-hoogte="1.8">
-        <span class="h-datum">voorjaar 2016</span>
-        <span class="h-titel">Aan de slag</span>
-        <span class="h-tekst">Hij zijn eigen baas, zij met een helm op.</span>
+        <span class="h-datum" data-fr="printemps 2016">voorjaar 2016</span>
+        <span class="h-titel" data-fr="Au travail">Aan de slag</span>
+        <span class="h-tekst" data-fr="Lui à son compte, elle entre les plans et le chantier.">Hij zijn eigen baas, zij tussen de plannen en de werf.</span>
       </li>
       <li data-jaar="2016" data-hoogte="2.2">
         <span class="h-datum">02.07.2016</span>
-        <span class="h-titel">Ja</span>
-        <span class="h-tekst">Voor het leven.</span>
+        <span class="h-titel" data-fr="Oui">Ja</span>
+        <span class="h-tekst" data-fr="Pour la vie.">Voor het leven.</span>
       </li>
       <li data-jaar="2018" data-hoogte="2">
-        <span class="h-datum">voorjaar 2018</span>
-        <span class="h-titel">Een complete switch</span>
-        <span class="h-tekst">Van de werf naar het fornuis.</span>
+        <span class="h-datum" data-fr="printemps 2018">voorjaar 2018</span>
+        <span class="h-titel" data-fr="Changement de cap">Een complete switch</span>
+        <span class="h-tekst" data-fr="Du chantier aux fourneaux.">Van de werf naar het fornuis.</span>
       </li>
-      <li class="stil" data-jaar="2021" data-hoogte="1.3">
+      <li class="stil" data-jaar="2021" data-hoogte="1.3" data-trails="solo">
         <span class="h-datum">2021</span>
-        <span class="h-titel">Afscheid</span>
-        <span class="h-tekst">Wat je liefhebt, verlies je nooit helemaal.</span>
+        <span class="h-titel" data-fr="Adieu">Afscheid</span>
+        <span class="h-tekst" data-fr="Ce qu&#x27;on aime, on ne le perd jamais tout à fait.">Wat je liefhebt, verlies je nooit helemaal.</span>
       </li>
       <li class="stil" data-jaar="2022" data-hoogte="1.2">
         <span class="h-datum">2022</span>
-        <span class="h-titel">Afscheid</span>
-        <span class="h-tekst">Wie in ons hart leeft, is nooit echt weg.</span>
+        <span class="h-titel" data-fr="Adieu">Afscheid</span>
+        <span class="h-tekst" data-fr="Qui vit dans notre cœur n&#x27;est jamais vraiment parti.">Wie in ons hart leeft, is nooit echt weg.</span>
       </li>
       <li data-jaar="2022" data-hoogte="2.6" data-voertuig="ivette">
         <span class="h-datum">2022 – 2023</span>
-        <span class="h-titel">Thuis op vier wielen</span>
-        <span class="h-tekst">Een eigen zaak en een jaar op schok met Ivette. Hij bouwt aan een droom, zij schrijft een kookboek. The good life.</span>
+        <span class="h-titel" data-fr="Chez nous sur quatre roues">Thuis op vier wielen</span>
+        <span class="h-tekst" data-fr="Notre propre entreprise et une année sur la route avec Ivette. Lui construit un rêve, elle écrit un livre de cuisine. The good life.">Een eigen zaak en een jaar op schok met Ivette. Hij bouwt aan een droom, zij schrijft een kookboek. The good life.</span>
       </li>
       <li class="stil" data-jaar="2023" data-hoogte="2.9" data-daarna="1.5">
         <span class="h-datum">2023</span>
-        <span class="h-titel">Vreugde en verdriet</span>
-        <span class="h-tekst">Liggen soms dichter bij elkaar dan je denkt.</span>
+        <span class="h-titel" data-fr="Joie et chagrin">Vreugde en verdriet</span>
+        <span class="h-tekst" data-fr="Sont parfois plus proches qu&#x27;on ne le pense.">Liggen soms dichter bij elkaar dan je denkt.</span>
       </li>
-      <li data-jaar="2023" data-hoogte="2.4">
-        <span class="h-datum">najaar 2023</span>
-        <span class="h-titel">Elk een eigen vuur</span>
-        <span class="h-tekst">Hij bouwt aan leren, zij kookt voor anderen. Allebei op eigen benen.</span>
+      <li data-jaar="2023" data-hoogte="2.4" data-trails="samen">
+        <span class="h-datum" data-fr="automne 2023">najaar 2023</span>
+        <span class="h-titel" data-fr="Chacun son feu">Elk een eigen vuur</span>
+        <span class="h-tekst" data-fr="Lui au service de l&#x27;apprentissage, elle aux fourneaux pour les autres. Chacun à son compte.">Hij bouwt aan leren, zij kookt voor anderen. Allebei op eigen benen.</span>
       </li>
       <li data-jaar="2024" data-hoogte="2.5" data-voertuig="caddy">
         <span class="h-datum">2024</span>
-        <span class="h-titel">Klein en gezellig</span>
-        <span class="h-tekst">Ivette rust in de tuin. Wij rijden verder.</span>
+        <span class="h-titel" data-fr="Petit mais douillet">Klein en gezellig</span>
+        <span class="h-tekst" data-fr="Ivette se repose au jardin. Nous, on continue la route.">Ivette rust in de tuin. Wij rijden verder.</span>
       </li>
       <li data-jaar="2025" data-hoogte="2.2">
         <span class="h-datum">2025</span>
-        <span class="h-titel">Even bergop</span>
-        <span class="h-tekst">Samen doorgetrapt.</span>
+        <span class="h-titel" data-fr="Un peu de montée">Even bergop</span>
+        <span class="h-tekst" data-fr="Ensemble, on a continué à pédaler.">Samen doorgetrapt.</span>
       </li>
       <li data-jaar="2025" data-hoogte="2.7">
-        <span class="h-datum">najaar 2025</span>
-        <span class="h-titel">Nieuwe wind</span>
-        <span class="h-tekst">Een nieuw avontuur voor hem, een groeiende zaak voor haar.</span>
+        <span class="h-datum" data-fr="automne 2025">najaar 2025</span>
+        <span class="h-titel" data-fr="Vent nouveau">Nieuwe wind</span>
+        <span class="h-tekst" data-fr="Une nouvelle aventure pour lui, une entreprise qui grandit pour elle.">Een nieuw avontuur voor hem, een groeiende zaak voor haar.</span>
       </li>
       <li data-jaar="2026" data-hoogte="2.9">
         <span class="h-datum">2026</span>
-        <span class="h-titel">Een keuze</span>
-        <span class="h-tekst">Eerst een stalen keuken, dan het feest.</span>
+        <span class="h-titel" data-fr="Un choix">Een keuze</span>
+        <span class="h-tekst" data-fr="D&#x27;abord une cuisine en acier, ensuite la fête.">Eerst een stalen keuken, dan het feest.</span>
       </li>
       <li class="now" data-jaar="2027" data-hoogte="3.2">
         <span class="h-datum">02.07.2027</span>
-        <span class="h-titel">Stalen huwelijk</span>
-        <span class="h-tekst">Met de mensen die we graag zien. *this time for real!</span>
+        <span class="h-titel" data-fr="Noces d&#x27;acier">Stalen huwelijk</span>
+        <span class="h-tekst" data-fr="Avec les gens que nous aimons. *this time for real!">Met de mensen die we graag zien. *this time for real!</span>
       </li>
     </ol>
   </div>
@@ -176,41 +185,41 @@
 <section class="section" id="praktisch">
   <div class="wrap">
     <p class="kicker">base camp</p>
-    <h2>Praktisch</h2>
+    <h2 data-fr="Infos pratiques">Praktisch</h2>
 
     <!-- de drie hoofdzaken, als stalen plaatjes -->
     <div class="platen">
       <div class="plaat">
-        <span class="p-label">wanneer</span>
-        <span class="p-groot">vr 02.07.27</span>
-        <span class="p-klein">Vanaf de namiddag. Om 20u gaat de muziek aan.</span>
+        <span class="p-label" data-fr="quand">wanneer</span>
+        <span class="p-groot" data-fr="ve 02.07.27">vr 02.07.27</span>
+        <span class="p-klein" data-fr="À partir de l&#x27;après-midi. La musique démarre à 20 h.">Vanaf de namiddag. Om 20u gaat de muziek aan.</span>
       </div>
       <div class="plaat">
-        <span class="p-label">waar</span>
+        <span class="p-label" data-fr="où">waar</span>
         <span class="p-groot">Hoeilaart</span>
-        <span class="p-klein">Bij ons thuis, achteraan in de tuin van Karl &amp; Adèle. Merci, Adèle en Karl!</span>
+        <span class="p-klein" data-fr="Chez nous, au fond du jardin de Karl &amp;amp; Adèle. Merci, Adèle et Karl !">Bij ons thuis, achteraan in de tuin van Karl &amp; Adèle. Merci, Adèle en Karl!</span>
       </div>
       <div class="plaat">
-        <span class="p-label">wat</span>
-        <span class="p-groot">Samen zijn</span>
-        <span class="p-klein">Lekker eten, goed drinken. En dansen, vooral dansen.</span>
+        <span class="p-label" data-fr="quoi">wat</span>
+        <span class="p-groot" data-fr="Être ensemble">Samen zijn</span>
+        <span class="p-klein" data-fr="Bien manger, bien boire. Et danser, surtout danser.">Lekker eten, goed drinken. En dansen, vooral dansen.</span>
       </div>
     </div>
 
-    <h3 class="sub">Goed om te weten</h3>
+    <h3 class="sub" data-fr="Bon à savoir">Goed om te weten</h3>
     <ul class="weetjes">
-      <li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 3 3 6l2 4.2 2.2-1.1V21h9.6V9.1L19 10.2 21 6l-5.5-3c-.6 1.6-1.9 2.6-3.5 2.6S9.1 4.6 8.5 3Z"/></svg><div><strong>Dresscode</strong><p>Tuinfeest, dus casual. Kies schoenen waarin je tot laat kan dansen: hakken zakken weg in het gras.</p></div></li>
-      <li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="8.5" cy="7.5" r="3"/><path d="M2.5 20c0-3.4 2.7-6 6-6s6 2.6 6 6"/><circle cx="17" cy="8.5" r="2.4"/><path d="M15.6 14.2c3.2-.4 5.9 1.9 5.9 5.3"/></svg><div><strong>Kinderen en plus ones</strong><p>Wie je meebrengt, is welkom. Zet iedereen mee in het formulier, dan tellen we juist.</p></div></li>
-      <li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3v18M4.5 3v5.5a2.5 2.5 0 0 0 5 0V3M17.5 21V3c-2.6 1.4-3.8 4.4-3.8 8.2h3.8"/></svg><div><strong>Eten</strong><p>Er is genoeg, en het is lekker. Vegetarisch, een allergie of iets anders? Zeg het in het formulier.</p></div></li>
-      <li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 16.5V7.5a1.5 1.5 0 0 1 1.5-1.5h10.5l4.5 5v5.5Z"/><path d="M14.5 6v5h4.5"/><circle cx="7" cy="17" r="2"/><circle cx="16" cy="17" r="2"/></svg><div><strong>Blijven slapen</strong><p>Camionette, camper of tentje mee? Er is plaats in de tuin. Laat het ons even weten.</p></div></li>
+      <li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 3 3 6l2 4.2 2.2-1.1V21h9.6V9.1L19 10.2 21 6l-5.5-3c-.6 1.6-1.9 2.6-3.5 2.6S9.1 4.6 8.5 3Z"/></svg><div><strong data-fr="Tenue">Dresscode</strong><p data-fr="Fête au jardin, donc tenue décontractée. Choisissez des chaussures pour danser tard : les talons s&#x27;enfoncent dans l&#x27;herbe.">Tuinfeest, dus casual. Kies schoenen waarin je tot laat kan dansen: hakken zakken weg in het gras.</p></div></li>
+      <li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="8.5" cy="7.5" r="3"/><path d="M2.5 20c0-3.4 2.7-6 6-6s6 2.6 6 6"/><circle cx="17" cy="8.5" r="2.4"/><path d="M15.6 14.2c3.2-.4 5.9 1.9 5.9 5.3"/></svg><div><strong data-fr="Enfants et +1">Kinderen en plus ones</strong><p data-fr="Qui vous accompagne est le bienvenu. Indiquez tout le monde dans le formulaire, pour qu&#x27;on compte juste.">Wie je meebrengt, is welkom. Zet iedereen mee in het formulier, dan tellen we juist.</p></div></li>
+      <li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3v18M4.5 3v5.5a2.5 2.5 0 0 0 5 0V3M17.5 21V3c-2.6 1.4-3.8 4.4-3.8 8.2h3.8"/></svg><div><strong data-fr="Repas">Eten</strong><p data-fr="Il y en aura assez, et ce sera bon. Végétarien, une allergie ou autre chose ? Dites-le dans le formulaire.">Er is genoeg, en het is lekker. Vegetarisch, een allergie of iets anders? Zeg het in het formulier.</p></div></li>
+      <li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 16.5V7.5a1.5 1.5 0 0 1 1.5-1.5h10.5l4.5 5v5.5Z"/><path d="M14.5 6v5h4.5"/><circle cx="7" cy="17" r="2"/><circle cx="16" cy="17" r="2"/></svg><div><strong data-fr="Dormir sur place">Blijven slapen</strong><p data-fr="Camionnette, camping-car ou petite tente ? Il y a de la place dans le jardin. Prévenez-nous.">Camionette, camper of tentje mee? Er is plaats in de tuin. Laat het ons even weten.</p></div></li>
       <!-- Rekeningnummer: vervang "volgt nog" door het nummer, bv. BE00 0000 0000 0000 -->
-      <li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5.5" cy="16.5" r="3.5"/><circle cx="18.5" cy="16.5" r="3.5"/><path d="M5.5 16.5 9 9h7l2.5 7.5M9 9l3 7.5L16 9M14.5 5.5h2.5L18.5 9"/></svg><div><strong>Cadeautjes</strong><p>Echt niet nodig, we reizen graag licht. Wil je toch iets geven? Dan sparen we voor een volgend avontuur, een reis of een fiets. Rekeningnummer volgt nog.</p></div></li>
+      <li><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5.5" cy="16.5" r="3.5"/><circle cx="18.5" cy="16.5" r="3.5"/><path d="M5.5 16.5 9 9h7l2.5 7.5M9 9l3 7.5L16 9M14.5 5.5h2.5L18.5 9"/></svg><div><strong data-fr="Cadeaux">Cadeautjes</strong><p data-fr="Vraiment pas nécessaire, nous aimons voyager léger. Vous voulez quand même offrir quelque chose ? Nous économisons pour une prochaine aventure, un voyage ou un vélo. Numéro de compte à suivre.">Echt niet nodig, we reizen graag licht. Wil je toch iets geven? Dan sparen we voor een volgend avontuur, een reis of een fiets. Rekeningnummer volgt nog.</p></div></li>
     </ul>
 
     <!-- Contact. De nummers worden pas in de browser samengesteld, zodat spambots ze minder makkelijk oppikken.
          E-mail volgt zodra het domein er is: zet dan hieronder een derde <div class="contact-card">. -->
     <div class="contact" id="contact">
-      <h3 class="sub">Vragen? Stuur ons een berichtje</h3>
+      <h3 class="sub" data-fr="Des questions ? Envoyez-nous un message">Vragen? Stuur ons een berichtje</h3>
       <div class="contact-cards">
         <div class="contact-card plaat" data-naam="Jan" data-nr="32|497|85|29|38"></div>
         <div class="contact-card plaat" data-naam="Leyla" data-nr="32|486|07|46|60"></div>
@@ -224,76 +233,76 @@
   <svg class="rand rand-top" viewBox="0 0 1600 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0,0 H1600 V58 L1530,40 L1450,62 L1340,30 L1250,52 L1190,26 L1130,46 L1060,18 L950,48 L860,30 L760,56 L640,34 L520,60 L430,24 L370,44 L300,20 L190,50 L110,36 L0,60 Z"/></svg>
   <div class="wrap narrow">
     <p class="kicker">drop-in</p>
-    <h2>Ben je erbij?</h2>
-    <p class="lead">Laat het ons weten vóór 30 mei 2027. Dat duurt een minuutje.</p>
+    <h2 data-fr="Vous serez là ?">Ben je erbij?</h2>
+    <p class="lead" data-fr="Dites-le-nous avant le 30 mai 2027. Ça prend une minute.">Laat het ons weten vóór 30 mei 2027. Dat duurt een minuutje.</p>
 
     <!-- Je eerder verstuurde antwoord (alleen zichtbaar op het toestel waarmee je het verstuurde) -->
     <div class="mijn-antwoord" id="mijn-antwoord" hidden>
-      <p class="ma-titel">Je antwoord van <span id="ma-datum"></span></p>
+      <p class="ma-titel"><span data-fr="Votre réponse du">Je antwoord van</span> <span id="ma-datum"></span></p>
       <dl id="ma-lijst"></dl>
-      <button type="button" id="ma-aanpassen">Antwoord aanpassen</button>
+      <button type="button" id="ma-aanpassen" data-fr="Modifier ma réponse">Antwoord aanpassen</button>
     </div>
 
     <form class="rsvp plaat-form" id="rsvp" novalidate>
-      <label for="f-naam">Naam of namen</label>
-      <input id="f-naam" name="naam" type="text" autocomplete="name" required placeholder="bv. Karl & Adèle">
+      <label for="f-naam" data-fr="Nom ou noms">Naam of namen</label>
+      <input id="f-naam" name="naam" type="text" autocomplete="name" required placeholder="bv. Karl & Adèle" data-fr-placeholder="p. ex. Karl &amp; Adèle">
 
       <fieldset>
-        <legend>Komen jullie?</legend>
+        <legend data-fr="Vous venez ?">Komen jullie?</legend>
         <div class="choices">
-          <label><input type="radio" name="komt" value="Ja" required> ja, zeker</label>
-          <label><input type="radio" name="komt" value="Nee"> helaas niet</label>
-          <label><input type="radio" name="komt" value="Nog niet zeker"> nog niet zeker</label>
+          <label><input type="radio" name="komt" value="Ja" required> <span data-fr="oui, bien sûr">ja, zeker</span></label>
+          <label><input type="radio" name="komt" value="Nee"> <span data-fr="hélas non">helaas niet</span></label>
+          <label><input type="radio" name="komt" value="Nog niet zeker"> <span data-fr="pas encore sûr">nog niet zeker</span></label>
         </div>
       </fieldset>
 
       <div class="row">
         <div>
-          <label for="f-volw">Volwassenen</label>
+          <label for="f-volw" data-fr="Adultes">Volwassenen</label>
           <input id="f-volw" name="volwassenen" type="number" min="0" max="20" inputmode="numeric" value="1">
         </div>
         <div>
-          <label for="f-kind">Kinderen</label>
+          <label for="f-kind" data-fr="Enfants">Kinderen</label>
           <input id="f-kind" name="kinderen" type="number" min="0" max="20" inputmode="numeric" value="0">
         </div>
       </div>
 
-      <label for="f-dieet">Dieetwensen of allergieën <span class="opt">(optioneel)</span></label>
+      <label for="f-dieet" data-fr="Régime ou allergies &lt;span class=&quot;opt&quot;&gt;(facultatif)&lt;/span&gt;">Dieetwensen of allergieën <span class="opt">(optioneel)</span></label>
       <input id="f-dieet" name="dieet" type="text">
 
       <fieldset>
-        <legend>Blijven jullie slapen?</legend>
+        <legend data-fr="Vous restez dormir ?">Blijven jullie slapen?</legend>
         <div class="choices">
-          <label><input type="radio" name="slapen" value="Nee" checked> nee, we gaan naar huis</label>
-          <label><input type="radio" name="slapen" value="Camionette of camper"> ja, in de camionette of camper</label>
-          <label><input type="radio" name="slapen" value="Tent"> ja, in een tentje</label>
+          <label><input type="radio" name="slapen" value="Nee" checked> <span data-fr="non, on rentre">nee, we gaan naar huis</span></label>
+          <label><input type="radio" name="slapen" value="Camionette of camper"> <span data-fr="oui, en camionnette ou camping-car">ja, in de camionette of camper</span></label>
+          <label><input type="radio" name="slapen" value="Tent"> <span data-fr="oui, sous tente">ja, in een tentje</span></label>
         </div>
       </fieldset>
 
-      <label for="f-bericht">Een berichtje voor Leyla &amp; Jan <span class="opt">(optioneel)</span></label>
+      <label for="f-bericht" data-fr="Un petit mot pour Leyla &amp;amp; Jan &lt;span class=&quot;opt&quot;&gt;(facultatif)&lt;/span&gt;">Een berichtje voor Leyla &amp; Jan <span class="opt">(optioneel)</span></label>
       <textarea id="f-bericht" name="bericht" rows="3"></textarea>
 
-      <div class="honing" aria-hidden="true"><label for="f-website">Laat dit leeg</label><input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+      <div class="honing" aria-hidden="true"><label for="f-website" data-fr="Laisser vide">Laat dit leeg</label><input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
 
-      <button type="submit">Verstuur en spring op de fiets</button>
+      <button type="submit" data-fr="Envoyer et en selle !">Verstuur en spring op de fiets</button>
       <p class="status" id="rsvp-status" role="status" aria-live="polite"></p>
     </form>
-    <p class="privacy">Je antwoord gaat rechtstreeks naar Leyla &amp; Jan. Om het later te kunnen bekijken en aanpassen, onthoudt je eigen browser een kopie op dit toestel. Iets veranderd? Vul het formulier gewoon opnieuw in: je laatste antwoord telt.</p>
+    <p class="privacy" data-fr="Votre réponse va directement à Leyla &amp;amp; Jan. Pour pouvoir la consulter et la modifier plus tard, votre navigateur en garde une copie sur cet appareil. Quelque chose a changé ? Remplissez simplement le formulaire à nouveau : c&#x27;est votre dernière réponse qui compte.">Je antwoord gaat rechtstreeks naar Leyla &amp; Jan. Om het later te kunnen bekijken en aanpassen, onthoudt je eigen browser een kopie op dit toestel. Iets veranderd? Vul het formulier gewoon opnieuw in: je laatste antwoord telt.</p>
   </div>
   <svg class="rand rand-bot" viewBox="0 0 1600 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0,120 H1600 V70 L1500,84 L1420,60 L1310,88 L1230,66 L1120,92 L1040,72 L960,90 L860,62 L780,80 L690,58 L600,86 L500,64 L420,90 L330,70 L240,88 L150,66 L60,84 L0,72 Z"/></svg>
 </section>
 
 <!-- ============ NIEUWS ============ -->
-<!-- Nieuw bericht? Zet een nieuw <article> bovenaan de lijst. -->
+<!-- Nieuw bericht? Zet een nieuw <article> bovenaan de lijst, met de Franse tekst in data-fr="…". -->
 <section class="section" id="nieuws">
   <div class="wrap narrow">
     <p class="kicker">trail updates</p>
-    <h2>Nieuws</h2>
+    <h2 data-fr="Nouvelles">Nieuws</h2>
     <div class="news">
       <article>
-        <time datetime="2026-11-07">7 november 2026</time>
-        <h3>De datum staat vast</h3>
-        <p>Vrijdag 2 juli 2027. Karl &amp; Adèle stellen hun tuin open en de stalen keuken is klaar voor gebruik. Meer info volgt in het voorjaar.</p>
+        <time datetime="2026-11-07" data-fr="7 novembre 2026">7 november 2026</time>
+        <h3 data-fr="La date est fixée">De datum staat vast</h3>
+        <p data-fr="Vendredi 2 juillet 2027. Karl &amp;amp; Adèle ouvrent leur jardin et la cuisine en acier est prête à servir. Plus d&#x27;infos au printemps.">Vrijdag 2 juli 2027. Karl &amp; Adèle stellen hun tuin open en de stalen keuken is klaar voor gebruik. Meer info volgt in het voorjaar.</p>
       </article>
     </div>
   </div>
@@ -316,14 +325,15 @@
       <g transform="translate(108,0)"><path class="p-haak" d="M-17,-3.5 h-5"/><rect class="p-drager" x="-30" y="-5" width="9" height="2.4" rx="0.8"/><rect class="p-licht" x="-30.4" y="-5.6" width="1.6" height="1.6" rx="0.4"/><g class="p-fiets leyla"><rect class="p-band" x="-28.8" y="-12.5" width="2.4" height="8.2" rx="1.2"/><path d="M-27.6,-12.5 V-15.6 M-32.2,-16.2 Q-27.6,-15 -23.0,-16.2 M-29.2,-13.8 h3.2"/></g><g class="p-fiets jan"><rect class="p-band" x="-25.4" y="-12.5" width="2.4" height="8.2" rx="1.2"/><path d="M-24.2,-12.5 V-15.6 M-28.8,-16.2 Q-24.2,-15 -19.6,-16.2 M-25.8,-13.8 h3.2"/></g><path class="p-van-body" d="M-17,-2 v-11.5 a2.5,2.5 0 0 1 2.5,-2.5 h19.5 l5.2,5.6 l4.6,1.3 q1.2,0.4 1.2,1.6 v5.5 Z"/><path class="p-van-raam" d="M5.2,-14.4 l4.4,4.8 h-4.4 Z"/><rect class="p-van-raam" x="-3.5" y="-13.6" width="7" height="4.2" rx="0.8"/><circle class="p-van-wiel" cx="-10.5" cy="-1" r="3.7"/><circle class="p-van-wiel" cx="9" cy="-1" r="3.7"/></g>
     </svg>
     <p class="mark">L&amp;J</p>
-    <p>02.07.27 · 11 jaar getrouwd, 20 jaar liefde</p>
+    <p data-fr="02.07.27 · 11 ans de mariage, 20 ans d&#x27;amour">02.07.27 · 11 jaar getrouwd, 20 jaar liefde</p>
     <p class="aside">*see you on the road</p>
   </div>
 </footer>
 
-<script src="pad.js?v=7nov-12"></script>
-<script src="rsvp.js?v=7nov-12"></script>
-<script src="zijkant.js?v=7nov-12"></script>
-<script src="rijders.js?v=7nov-12"></script>
+<script src="taal.js?v=7nov-14"></script>
+<script src="pad.js?v=7nov-14"></script>
+<script src="rsvp.js?v=7nov-14"></script>
+<script src="zijkant.js?v=7nov-14"></script>
+<script src="rijders.js?v=7nov-14"></script>
 </body>
 </html>
