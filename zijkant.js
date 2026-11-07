@@ -85,16 +85,29 @@
       <circle cx="78" cy="48" r="1.8" fill="currentColor"/><path d="M84 64q6-1 5-9"/><path d="M94 60v4"/>
       <g class="z-wieg" style="transform-origin:18px 56px"><path d="M18 56q-5 1-7-3M11 53l-2-3M11 53l-3 1"/></g></g>`,
     borncrazy: `<g ${S}>
-      <g class="z-wheelie" style="transform-origin:68px 70px">
+      <circle cx="50" cy="50" r="46"/><circle cx="50" cy="50" r="41"/>
+      <path id="z-boog-bc" d="M20,50 a30,30 0 0 1 60,0" stroke="none"/>
+      <text style="font:600 12.5px var(--display);letter-spacing:.1em;fill:var(--staal)" stroke="none"><textPath href="#z-boog-bc" startOffset="50%" text-anchor="middle">BORN CRAZY</textPath></text>
+      <g transform="translate(14 22) scale(.72)"><g class="z-wheelie" style="transform-origin:68px 70px">
         <circle cx="30" cy="70" r="13"/><circle cx="68" cy="70" r="13"/>
-        <path d="M30 70h18l-7-20ZM48 70l16-22H41M64 48l4 22M64 48l-2-8h8M37 50h9"/></g>
-      <path class="z-knipper" d="M4 58h12M2 68h11M6 78h9"/></g>`,
+        <path d="M30 70h18l-7-20ZM48 70l16-22H41M64 48l4 22M64 48l-2-8h8M37 50h9"/></g></g></g>`,
     hantilopen: `<g ${S}>
       <path d="M12 60a38 38 0 0 1 76 0"/><path d="M14 50l-6-2M20 36l-5-4M31 25l-3-6M44 21l-1-6M56 21l1-6M69 25l3-6M80 36l5-4M86 50l6-2"/>
       <path d="M50 86c-7 0-11-7-11-15 0-11 4-21 11-25 7 4 11 14 11 25 0 8-4 15-11 15Z"/>
       <path d="M40 54l-16-7 13 14M60 54l16-7-13 14"/>
       <path d="M45 47c-4-11-14-16-22-14M55 47c4-11 14-16 22-14M20 31l7 4M80 31l-7 4"/>
       <path d="M46 78h8M44 62v.1M56 62v.1"/></g>`,
+    sterren: `<g ${S}>
+      <path d="M22 46l40-20 6 12-40 20Z"/><path d="M62 26l4-2 6 12-4 2"/><path d="M18 48l4-2 6 12-4 2Z"/>
+      <path d="M46 46l-14 40M46 46l2 40M46 46l16 38"/>
+      <circle cx="78" cy="68" r="7"/><path d="M66 72q12-10 24-8"/>
+      <path class="z-knipper" d="M20 18l1.6 4 4 1.6-4 1.6-1.6 4-1.6-4-4-1.6 4-1.6Z"/>
+      <path class="z-knipper" style="animation-delay:.8s" d="M84 14l1.2 3 3 1.2-3 1.2-1.2 3-1.2-3-3-1.2 3-1.2Z"/>
+      <circle class="z-knipper" style="animation-delay:1.6s" cx="40" cy="14" r="1.6" fill="currentColor"/></g>`,
+    architectuur: `<g ${S}>
+      <path d="M12 86h76"/><path d="M18 86V54l26-18 26 18v32"/><path d="M30 86V66h12v20M52 62h10v10H52Z"/>
+      <g class="z-wieg" style="transform-origin:70px 14px"><circle cx="70" cy="14" r="3.5"/><path d="M68 17L56 46M72 17l12 29"/><path d="M84 46l1 4"/><path d="M61 34q9 5 18 0"/></g>
+      <path d="M76 86l14-20v20" /></g>`,
     sailing: `<g ${S}>
       <circle cx="50" cy="52" r="38"/><path d="M14 64L32 30l8 12 12-28 18 34 14 10"/>
       <g class="z-hobbel"><path d="M52 34v38M52 34L36 70h16Z"/><path d="M32 74h40l-6 8H38Z"/></g>
@@ -104,8 +117,8 @@
       <g class="z-zon2" style="transform-origin:72px 40px"><path d="M66 40a6 6 0 0 1 12 0"/><path d="M72 30v-5M80 33l4-4M83 40h5M64 33l-4-4"/></g>
       <path d="M30 32l1 2.6 2.6 1-2.6 1-1 2.6-1-2.6-2.6-1 2.6-1Z"/></g>`
   };
-  const links = ["fiets", "proost", "kimono", "gember", "sailing", "varen", "druiven", "hamsa", "dromen", "laptop"];
-  const rechts = ["camionette", "messen", "ballet", "bergen", "borncrazy", "specerijen", "hantilopen", "groenten", "hotton", "kampvuur", "wandelen", "zon"];
+  const links = ["fiets", "proost", "kimono", "sterren", "gember", "sailing", "varen", "druiven", "hamsa", "dromen", "laptop"];
+  const rechts = ["camionette", "messen", "architectuur", "ballet", "bergen", "borncrazy", "specerijen", "hantilopen", "groenten", "hotton", "kampvuur", "wandelen", "zon"];
   const traag = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const banden = [];
@@ -126,19 +139,53 @@
     }
     band.appendChild(kolom);
     document.body.appendChild(band);
-    banden.push({ kolom, factor: kant === "links" ? 0.22 : 0.3 });
+    const b = { band, kolom, factor: kant === "links" ? 0.22 : 0.3, eigen: 0, doel: 0 };
+    banden.push(b);
+    // zelf door de tekeningen scrollen: met het muiswiel of door te slepen
+    band.addEventListener("wheel", (e) => {
+      e.preventDefault();                       // alleen de zijkant schuift, de pagina blijft staan
+      b.doel += e.deltaY * (e.deltaMode === 1 ? 16 : 1);
+      start();
+    }, { passive: false });
+    let sleep = null;
+    band.addEventListener("pointerdown", (e) => {
+      sleep = { y: e.clientY, doel: b.doel };
+      band.setPointerCapture(e.pointerId); band.classList.add("sleept");
+    });
+    band.addEventListener("pointermove", (e) => {
+      if (!sleep) return;
+      b.doel = sleep.doel - (e.clientY - sleep.y);
+      if (traag) b.eigen = b.doel;
+      start();
+    });
+    const los = () => { sleep = null; band.classList.remove("sleept"); };
+    band.addEventListener("pointerup", los); band.addEventListener("pointercancel", los);
   });
-  if (traag) return;
-  // traag meeschuiven met het scrollen (een beetje diepte)
-  let wacht = false;
+  // traag meeschuiven met het scrollen (een beetje diepte), plus wat je zelf scrolde
+  let wacht = false, loopt = false;
   const schuif = () => {
     wacht = false;
-    banden.forEach(({ kolom, factor }) => {
+    banden.forEach(({ kolom, factor, eigen }) => {
       const helft = kolom.scrollHeight / 2;
-      const y = (window.scrollY * factor) % helft;
+      const y = (((traag ? 0 : window.scrollY * factor) + eigen) % helft + helft) % helft;   // altijd naadloos rond
       kolom.style.transform = `translateY(${-y.toFixed(1)}px)`;
     });
   };
+  // zelf scrollen loopt zacht uit
+  function start() {
+    if (loopt) return; loopt = true;
+    const stap = () => {
+      let bezig = false;
+      banden.forEach((b) => {
+        if (traag) { b.eigen = b.doel; return; }
+        b.eigen += (b.doel - b.eigen) * 0.18;
+        if (Math.abs(b.doel - b.eigen) > 0.3) bezig = true; else b.eigen = b.doel;
+      });
+      schuif();
+      if (bezig) requestAnimationFrame(stap); else loopt = false;
+    };
+    requestAnimationFrame(stap);
+  }
   window.addEventListener("scroll", () => { if (!wacht) { wacht = true; requestAnimationFrame(schuif); } }, { passive: true });
   schuif();
 })();

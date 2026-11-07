@@ -48,4 +48,12 @@
 
   document.querySelectorAll("[data-taal]").forEach((b) => b.addEventListener("click", () => window.zetTaal(b.dataset.taal)));
   pasToe();
+
+  // het menu bovenaan blijft staan; na een beetje scrollen krijgt het een stalen achtergrond
+  const nav = document.querySelector(".nav");
+  if (nav) {
+    const kijk = () => nav.classList.toggle("vast", window.scrollY > 30);
+    window.addEventListener("scroll", kijk, { passive: true });
+    kijk();
+  }
 })();

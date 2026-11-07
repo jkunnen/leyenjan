@@ -1,4 +1,4 @@
-/* Stalen huwelijk · huisstijl · versie 7nov-22 (met Ons pad)
+/* Stalen huwelijk · huisstijl · versie 7nov-28 (met Ons pad)
    Staal en wit, Fredoka voor titels, Nunito voor tekst, stempelrood als enige knipoog. */
 :root {
   --wit: #ffffff;
@@ -40,13 +40,18 @@ a { color: inherit; }
   overflow: hidden;
 }
 .nav {
-  position: absolute; top: 20px; left: 0; right: 0;
+  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+  padding-block: 14px;
+  transition: background-color .3s, box-shadow .3s, padding .3s;
   display: flex; justify-content: center; flex-wrap: wrap; gap: 4px 22px;
   font: 500 0.95rem/1 var(--display);
   padding-inline: var(--gutter);
 }
 .nav a { text-decoration: none; padding: 6px 2px; border-bottom: 2px solid transparent; }
 .nav a:hover { border-color: var(--wit); }
+/* zodra je scrolt: de balk blijft bovenaan staan, op een stalen strook */
+.nav.vast { padding-block: 10px; background: var(--staal-donker) url("assets/staal.jpg") center / cover; background-blend-mode: multiply; box-shadow: 0 2px 10px rgba(0,0,0,.25); color: var(--wit); }
+html { scroll-padding-top: 64px; }
 
 .corner { position: absolute; margin: 0; font: 400 clamp(0.9rem, 1.6vw, 1.15rem)/1.25 var(--display); letter-spacing: 0.02em; }
 .tl { top: 72px; left: var(--gutter); }
@@ -263,7 +268,9 @@ h3.sub { font: 600 1.35rem/1.2 var(--display); margin: 0 0 14px; }
 /* De banden liggen achter de inhoud. Secties met een achtergrond (staal, footer) schuiven erover. */
 .zijkant { display: none; }
 @media (min-width: 1320px) {
-  .zijkant { display: block; position: fixed; top: 0; bottom: 0; width: calc((100vw - 1040px) / 2); overflow: hidden; z-index: 0; pointer-events: none; color: var(--staal-licht); }
+  .zijkant { display: block; position: fixed; top: 0; bottom: 0; width: calc((100vw - 1040px) / 2); overflow: hidden; z-index: 0; color: var(--staal-licht); cursor: grab; touch-action: none; user-select: none; }
+  .zijkant.sleept { cursor: grabbing; }
+  .zijkant:hover { color: var(--staal); }
   .zijkant.links { left: 0; }
   .zijkant.rechts { right: 0; }
   .z-kolom { display: grid; gap: 90px; padding: 140px 0; will-change: transform; }
@@ -361,6 +368,8 @@ h3.sub { font: 600 1.35rem/1.2 var(--display); margin: 0 0 14px; }
 
 /* stickers in de grond */
 .p-sticker .st-rond { fill: var(--grafiet); }
+.p-sticker .st-rand { fill: none; stroke: var(--wit); stroke-width: .8; }
+.p-sticker .st-tekst { font: 600 7.6px/1 var(--display); letter-spacing: .06em; fill: var(--wit); }
 .p-sticker .st-lijn { fill: none; stroke: var(--wit); stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
 /* andere rijders in een wedstrijd */
 .p-rijder.ander .r-wiel, .p-rijder.ander .r-kader, .p-rijder.ander .r-lijf { stroke: var(--staal); }
@@ -375,7 +384,14 @@ h3.sub { font: 600 1.35rem/1.2 var(--display); margin: 0 0 14px; }
 .inkt-beeld svg { width: 92px; height: 92px; fill: none; stroke: var(--grafiet); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
 .inkt-beeld .ader, .inkt-beeld .meeldraad { stroke-width: 1.6; }
 .inkt-beeld .stip, .inkt-beeld .hart { fill: var(--grafiet); stroke: none; }
+.inkt-beeld .typmachine { font: 400 34px/1 "Special Elite", "American Typewriter", "Courier New", monospace; fill: var(--grafiet); stroke: none; }
+.inkt-beeld.is-sticker { border-style: solid; }
+.inkt-beeld .sticker { width: 108px; height: 108px; transform: rotate(-6deg); }
+.inkt-beeld .st-vlak { fill: var(--grafiet); stroke: none; }
+.inkt-beeld .st-ring { stroke: var(--wit); stroke-width: 1.2; }
+.inkt-beeld .st-woord { font: 600 8.4px/1 var(--display); letter-spacing: .05em; fill: var(--wit); stroke: none; }
+.inkt-beeld .st-wit { stroke: var(--wit); stroke-width: 2.4; }
 .inkt-beeld .schrift { font: italic 700 34px/1 "Snell Roundhand", "Brush Script MT", "Segoe Script", cursive; fill: var(--grafiet); stroke: none; }
 .inkt-beeld .lijn { stroke-width: 1.8; }
 .inkt-beeld .letter { stroke-width: 7; }
-@media (max-width: 640px) { .inkt-beeld { width: 76px; height: 76px; } .inkt-beeld svg { width: 58px; height: 58px; } }
+@media (max-width: 640px) { .inkt-beeld { width: 76px; height: 76px; } .inkt-beeld svg { width: 58px; height: 58px; } .inkt-beeld .sticker { width: 70px; height: 70px; } }

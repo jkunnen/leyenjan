@@ -204,14 +204,19 @@
     if (it.sticker) {
       const sx = p.x + 6, sy = Math.min(H - 36, p.y + 46);
       const g = el("g", { class: "p-sticker", transform: `translate(${sx},${sy}) rotate(${it.sticker === "dromen" ? 8 : -10})` });
-      el("circle", { cx: 0, cy: 0, r: 15, class: "st-rond" }, g);
+      const R = it.sticker === "borncrazy" ? 25 : 15;
+      el("circle", { cx: 0, cy: 0, r: R, class: "st-rond" }, g);
       if (it.sticker === "dromen") {   // bergen met een opkomende zon
         el("path", { d: "M-11,6 L-4,-2 L-1,1 L4,-6 L11,5 M4,-9 a3,3 0 0 1 6,0 M7,-14 v-2 M11,-12 l1.5,-1.5 M3,-12 l-1.5,-1.5", class: "st-lijn" }, g);
-      } else {                         // een fiets die een wheelie maakt, met snelheidsstreepjes
-        const f = el("g", { transform: "rotate(-18 4 4)" }, g);
+      } else {                         // Born Crazy: de naam in een boog, met een fiets op het achterwiel
+        el("circle", { cx: 0, cy: 0, r: R - 2.2, class: "st-rand" }, g);
+        el("path", { id: "st-boog-bc", d: `M${-(R - 6.5)},0 a${R - 6.5},${R - 6.5} 0 0 1 ${2 * (R - 6.5)},0`, fill: "none" }, g);
+        const t = el("text", { class: "st-tekst" }, g);
+        const tp = el("textPath", { href: "#st-boog-bc", startOffset: "50%", "text-anchor": "middle" }, t);
+        tp.textContent = "BORN CRAZY";
+        const f = el("g", { transform: "translate(1 8) scale(0.85) rotate(-18 4 4)" }, g);
         el("circle", { cx: -5, cy: 4, r: 4, class: "st-lijn" }, f); el("circle", { cx: 7, cy: 4, r: 4, class: "st-lijn" }, f);
         el("path", { d: "M-5,4 h6 l-2,-6 Z M1,4 l5,-7 h-8 M6,-3 l1,7 M6,-3 l-0.6,-2.4 h2.4", class: "st-lijn" }, f);
-        el("path", { d: "M-13,-2 h4 M-14,2 h4 M-13,6 h3", class: "st-lijn" }, g);
       }
     }
     // ballonnen voor de petekinderen (grafiet: van Jan, rood: van Leyla)
@@ -525,7 +530,13 @@
     hibiscus: `<svg viewBox="0 0 100 100" aria-hidden="true"><g transform="rotate(0 50 50)"><path d="M50 50C36 42 28 26 36 15q4-5 8-2q3-4 6-4q3 0 6 4q4-3 8 2C72 26 64 42 50 50Z"/><path class="ader" d="M50 50L50 18"/></g><g transform="rotate(72 50 50)"><path d="M50 50C36 42 28 26 36 15q4-5 8-2q3-4 6-4q3 0 6 4q4-3 8 2C72 26 64 42 50 50Z"/><path class="ader" d="M50 50L50 18"/></g><g transform="rotate(144 50 50)"><path d="M50 50C36 42 28 26 36 15q4-5 8-2q3-4 6-4q3 0 6 4q4-3 8 2C72 26 64 42 50 50Z"/><path class="ader" d="M50 50L50 18"/></g><g transform="rotate(216 50 50)"><path d="M50 50C36 42 28 26 36 15q4-5 8-2q3-4 6-4q3 0 6 4q4-3 8 2C72 26 64 42 50 50Z"/><path class="ader" d="M50 50L50 18"/></g><g transform="rotate(288 50 50)"><path d="M50 50C36 42 28 26 36 15q4-5 8-2q3-4 6-4q3 0 6 4q4-3 8 2C72 26 64 42 50 50Z"/><path class="ader" d="M50 50L50 18"/></g>
       <path class="meeldraad" d="M50 50Q66 40 78 24"/><circle class="stip" cx="79" cy="22" r="2.6"/><circle class="stip" cx="74" cy="22" r="2"/><circle class="stip" cx="80" cy="28" r="2"/><circle class="stip" cx="76" cy="17" r="1.8"/><circle class="stip" cx="83" cy="20" r="1.8"/>
       <circle class="hart" cx="50" cy="50" r="5"/></svg>`,
-    quoi: `<svg viewBox="0 0 120 100" aria-hidden="true"><text x="60" y="62" text-anchor="middle" class="schrift">Quoi?</text><path class="lijn" d="M20 74q40 8 80-2"/></svg>`,
+    quoi: `<svg viewBox="0 0 120 100" aria-hidden="true"><text x="60" y="60" text-anchor="middle" class="typmachine">quoi?</text></svg>`,
+    dromen: `<svg viewBox="0 0 100 100" class="sticker" aria-hidden="true">
+      <circle class="st-vlak" cx="50" cy="50" r="46"/><circle class="st-ring" cx="50" cy="50" r="41"/>
+      <path id="kaart-boog-dromen" d="M22,70 A33,33 0 1 1 78,70" fill="none" stroke="none"/>
+      <text class="st-woord"><textPath href="#kaart-boog-dromen" startOffset="50%" text-anchor="middle">HET LEVEN VAN ONS DROMEN</textPath></text>
+      <path class="st-wit" d="M30 66L41 53l5 5 8-13 16 21Z"/><path class="st-wit" d="M56 44a6 6 0 0 1 12 0"/><path class="st-wit" d="M62 33v-3M69 36l2-2M55 36l-2-2"/>
+      </svg>`,
     h: `<svg viewBox="0 0 100 100" aria-hidden="true"><path class="letter" d="M30 18v64M70 18v64M30 50h40M22 18h16M62 18h16M22 82h16M62 82h16"/></svg>`
   };
   const inktLabel = document.createElement("figure");
@@ -540,8 +551,10 @@
     kaart.querySelector(".h-titel").textContent = it.titel;
     kaart.querySelector(".h-tekst").textContent = it.tekst;
     voetnoot.hidden = !it.inkt;   // alleen bij een afscheid dat in inkt staat
-    inktLabel.hidden = !it.inkt;
-    if (it.inkt) inktLabel.innerHTML = INKT[it.inkt] || "";
+    const beeld = it.inkt || it.sticker;      // een tatoeage of een sticker, groot rechts in het kaartje
+    inktLabel.hidden = !INKT[beeld];
+    inktLabel.classList.toggle("is-sticker", !it.inkt && !!it.sticker);
+    if (INKT[beeld]) inktLabel.innerHTML = INKT[beeld];
     vorige.disabled = i === 0; volgende.disabled = i === nh - 1;
     rijNaar(Math.max(0, it.len - 42)); // parkeer net voor de halte, zodat je ze blijft zien
   }
