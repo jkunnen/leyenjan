@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Leyla & Jan · 02.07.27</title>
+<meta name="description" content="Het stalen huwelijk van Leyla & Jan: vrijdag 2 juli 2027. 11 jaar getrouwd, 20 jaar liefde.">
+<meta name="robots" content="noindex">
+<meta property="og:title" content="Leyla & Jan · save the date 02.07.27">
+<meta property="og:description" content="11 jaar getrouwd, 20 jaar liefde. *this time for real!">
+<meta property="og:image" content="assets/deelbeeld.jpg">
+<link rel="icon" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Nunito:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============ WELKOM ============ -->
+<header class="hero" id="welkom">
+  <nav class="nav" aria-label="Menu">
+    <a href="#verhaal">welkom</a>
+    <a href="#praktisch">praktisch</a>
+    <a href="#inschrijven">inschrijven</a>
+    <a href="#nieuws">nieuws</a>
+  </nav>
+
+  <p class="corner tl">*this time<br>for real!</p>
+  <p class="corner tr">11 jaar getrouwd<br>20 jaar liefde</p>
+
+  <div class="hero-main">
+    <p class="save">save the date</p>
+    <h1 class="date">02.07.27</h1>
+    <p class="countdown" id="countdown">vrijdag 2 juli 2027</p>
+  </div>
+
+  <p class="corner bl">steel marriage</p>
+  <p class="corner br">rsvp by<br>30th of May</p>
+
+  <!-- bergkam: wit silhouet dat overgaat in de pagina, met een enduro-trail -->
+  <svg class="ridge" viewBox="0 0 1600 220" preserveAspectRatio="none" aria-hidden="true">
+    <polyline class="far" points="0,120 140,82 250,96 380,58 470,78 560,66" />
+    <polyline class="far" points="1100,52 1230,74 1380,46 1500,70 1600,60" />
+    <path class="near" d="M0,170 L110,140 L190,152 L300,100 L370,122 L430,92 L520,138 L640,118 L760,148 L860,124 L950,140 L1060,104 L1130,74 L1190,98 L1250,80 L1340,124 L1450,108 L1530,132 L1600,120 L1600,220 L0,220 Z" />
+    <polyline class="trail" points="1252,108 1230,130 1280,150 1220,170 1284,190 1248,216" />
+  </svg>
+</header>
+
+<main>
+
+<!-- ============ VERHAAL ============ -->
+<section class="section" id="verhaal">
+  <div class="wrap narrow">
+    <p class="kicker">leyla &amp; jan</p>
+    <h2>Het stalen huwelijk</h2>
+    <ol class="timeline">
+      <li><span class="t-date">02.02.2007</span><span class="t-what">samen</span></li>
+      <li><span class="t-date">02.07.2016</span><span class="t-what">getrouwd</span></li>
+      <li><span class="t-date">02.07.2027</span><span class="t-what">feest</span></li>
+    </ol>
+    <p>Vorig jaar wilden we ons tinnen huwelijk groots vieren. Tot een stalen keuken voorrang kreeg: de keuken waarin Leyla nu haar heerlijkste gerechten maakt.</p>
+    <p>Dus vieren we, exact 11 jaar na onze trouwdag, ons stalen huwelijk. Met de mensen die we graag zien, in de tuin van Karl &amp; Adèle.</p>
+    <p class="aside">*we hope so</p>
+  </div>
+</section>
+
+<!-- ============ PRAKTISCH ============ -->
+<section class="section" id="praktisch">
+  <div class="wrap">
+    <p class="kicker">base camp</p>
+    <h2>Praktisch</h2>
+    <dl class="facts">
+      <div><dt>Wanneer</dt><dd>Vrijdag 2 juli 2027. We starten in de namiddag met receptie en eten, vanaf 20u wordt er gedanst.</dd></div>
+      <div><dt>Waar</dt><dd>In de tuin van Karl &amp; Adèle. Het adres en de parking sturen we mee met de uitnodiging.</dd></div>
+      <div><dt>Eten</dt><dd>Lekker eten, daar zorgen we voor. Geef je dieetwensen mee in het formulier.</dd></div>
+      <div><dt>Blijven slapen</dt><dd>Kom je met de camionette of de camper? Laat het ons weten in het formulier, dan zoeken we een plekje.</dd></div>
+      <div><dt>Kinderen</dt><dd>Info volgt.</dd></div>
+      <div><dt>Vragen</dt><dd>Stuur Leyla of Jan gewoon een berichtje.</dd></div>
+    </dl>
+  </div>
+</section>
+
+<!-- ============ INSCHRIJVEN ============ -->
+<section class="section steel" id="inschrijven">
+  <div class="wrap narrow">
+    <p class="kicker">drop-in</p>
+    <h2>Ben je erbij?</h2>
+    <p class="lead">Laat het ons weten vóór 30 mei 2027. Dat duurt een minuutje.</p>
+
+    <form class="rsvp" id="rsvp" novalidate>
+      <label for="f-naam">Naam of namen</label>
+      <input id="f-naam" name="naam" type="text" autocomplete="name" required placeholder="bv. Karl & Adèle">
+
+      <fieldset>
+        <legend>Komen jullie?</legend>
+        <div class="choices">
+          <label><input type="radio" name="komt" value="Ja" required> ja, zeker</label>
+          <label><input type="radio" name="komt" value="Nee"> helaas niet</label>
+          <label><input type="radio" name="komt" value="Nog niet zeker"> nog niet zeker</label>
+        </div>
+      </fieldset>
+
+      <div class="row">
+        <div>
+          <label for="f-volw">Volwassenen</label>
+          <input id="f-volw" name="volwassenen" type="number" min="0" max="20" inputmode="numeric" value="1">
+        </div>
+        <div>
+          <label for="f-kind">Kinderen</label>
+          <input id="f-kind" name="kinderen" type="number" min="0" max="20" inputmode="numeric" value="0">
+        </div>
+      </div>
+
+      <label for="f-dieet">Dieetwensen of allergieën <span class="opt">(optioneel)</span></label>
+      <input id="f-dieet" name="dieet" type="text">
+
+      <label class="check"><input id="f-camionette" name="camionette" type="checkbox" value="Ja"> we komen met de camionette of camper en blijven slapen</label>
+
+      <label for="f-bericht">Een berichtje voor Leyla &amp; Jan <span class="opt">(optioneel)</span></label>
+      <textarea id="f-bericht" name="bericht" rows="3"></textarea>
+
+      <button type="submit">Verstuur</button>
+      <p class="status" id="rsvp-status" role="status" aria-live="polite"></p>
+    </form>
+    <p class="privacy">Je antwoord gaat rechtstreeks naar Leyla &amp; Jan. Deze site bewaart zelf niets.</p>
+  </div>
+</section>
+
+<!-- ============ NIEUWS ============ -->
+<!-- Nieuw bericht? Zet een nieuw <article> bovenaan de lijst. -->
+<section class="section" id="nieuws">
+  <div class="wrap narrow">
+    <p class="kicker">trail updates</p>
+    <h2>Nieuws</h2>
+    <div class="news">
+      <article>
+        <time datetime="2026-11-07">7 november 2026</time>
+        <h3>De datum staat vast</h3>
+        <p>Vrijdag 2 juli 2027. Karl &amp; Adèle stellen hun tuin open en de stalen keuken is klaar voor gebruik. Meer info volgt in het voorjaar.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <p class="mark">L&amp;J</p>
+  <p>02.07.27 · 11 jaar getrouwd, 20 jaar liefde</p>
+</footer>
+
+<script src="rsvp.js"></script>
+</body>
+</html>

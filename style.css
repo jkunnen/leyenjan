@@ -1,0 +1,136 @@
+/* Stalen huwelijk · huisstijl
+   Staal en wit, Fredoka voor titels, Nunito voor tekst, stempelrood als enige knipoog. */
+:root {
+  --wit: #ffffff;
+  --staal-mist: #e3e7eb;
+  --staal-licht: #c5cbd1;
+  --staal: #8c939a;
+  --staal-donker: #4a5058;
+  --grafiet: #1f2328;
+  --stempelrood: #b0241c;
+  --display: "Fredoka", "Nunito", system-ui, sans-serif;
+  --body: "Nunito", system-ui, sans-serif;
+  --gutter: max(20px, env(safe-area-inset-left, 0px));
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0;
+  background: var(--wit);
+  color: var(--grafiet);
+  font: 400 1.0625rem/1.6 var(--body);
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--stempelrood); outline-offset: 3px; }
+
+/* ---------- hero ---------- */
+.hero {
+  position: relative;
+  min-height: min(92vh, 860px);
+  min-height: min(92svh, 860px);
+  background: var(--staal) url("assets/staal.jpg") center / cover;
+  color: var(--wit);
+  display: grid;
+  place-items: center;
+  padding: 88px var(--gutter) 180px;
+  overflow: hidden;
+}
+.nav {
+  position: absolute; top: 20px; left: 0; right: 0;
+  display: flex; justify-content: center; flex-wrap: wrap; gap: 4px 22px;
+  font: 500 0.95rem/1 var(--display);
+  padding-inline: var(--gutter);
+}
+.nav a { text-decoration: none; padding: 6px 2px; border-bottom: 2px solid transparent; }
+.nav a:hover { border-color: var(--wit); }
+
+.corner { position: absolute; margin: 0; font: 400 clamp(0.9rem, 1.6vw, 1.15rem)/1.25 var(--display); letter-spacing: 0.02em; }
+.tl { top: 72px; left: var(--gutter); }
+.tr { top: 72px; right: var(--gutter); text-align: right; }
+.bl { bottom: 168px; left: var(--gutter); }
+.br { bottom: 168px; right: var(--gutter); text-align: right; }
+
+.hero-main { text-align: center; position: relative; z-index: 1; }
+.save { margin: 0; font: 600 clamp(2.4rem, 8vw, 5.5rem)/0.9 var(--display); letter-spacing: -0.01em; }
+.date { margin: 0.12em 0 0; font: 600 clamp(4.2rem, 17vw, 12rem)/0.95 var(--display); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.countdown { margin: 0.9rem 0 0; font: 500 clamp(1rem, 2vw, 1.25rem)/1.3 var(--display); }
+
+.ridge { position: absolute; left: 0; right: 0; bottom: -1px; width: 100%; height: 190px; }
+.ridge .near { fill: var(--wit); }
+.ridge .far { fill: none; stroke: var(--wit); stroke-width: 3; stroke-linejoin: round; opacity: 0.8; vector-effect: non-scaling-stroke; }
+.ridge .trail { fill: none; stroke: var(--staal-donker); stroke-width: 5; stroke-linecap: round; stroke-dasharray: 0 11; vector-effect: non-scaling-stroke; }
+
+@media (max-width: 640px) {
+  .hero { padding-bottom: 150px; }
+  .tl, .tr { top: 64px; }
+  .bl, .br { bottom: 132px; }
+  .ridge { height: 130px; }
+}
+
+/* ---------- sections ---------- */
+.section { padding: clamp(56px, 9vw, 112px) var(--gutter); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+.wrap { max-width: 980px; margin: 0 auto; }
+.wrap.narrow { max-width: 640px; }
+.kicker { margin: 0 0 6px; font: 400 1rem/1.2 var(--display); color: var(--staal-donker); letter-spacing: 0.04em; }
+.kicker::before { content: "*"; }
+h2 { margin: 0 0 28px; font: 600 clamp(2.2rem, 5vw, 3.4rem)/1 var(--display); letter-spacing: -0.01em; text-wrap: balance; }
+h3 { margin: 4px 0 6px; font: 600 1.4rem/1.2 var(--display); }
+p { margin: 0 0 1em; max-width: 62ch; }
+.aside { font: 400 1.05rem/1.3 var(--display); color: var(--staal-donker); }
+.lead { font-size: 1.15rem; }
+
+.timeline { list-style: none; margin: 0 0 32px; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); border-top: 2px solid var(--grafiet); }
+.timeline li { padding: 12px 12px 0 0; display: grid; gap: 2px; }
+.timeline li + li { padding-left: 12px; border-left: 1px solid var(--staal-licht); }
+.t-date { font: 600 clamp(1.05rem, 3.2vw, 1.5rem)/1 var(--display); font-variant-numeric: tabular-nums; }
+.t-what { color: var(--staal-donker); font-size: 0.95rem; }
+.timeline li:last-child .t-date { color: var(--stempelrood); }
+
+.facts { margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 0 48px; }
+.facts div { padding: 18px 0; border-top: 1px solid var(--staal-licht); min-width: 0; }
+.facts dt { font: 600 1.15rem/1.2 var(--display); margin-bottom: 4px; }
+.facts dd { margin: 0; }
+
+/* ---------- inschrijven (op staal) ---------- */
+.section.steel { background: var(--staal-donker) url("assets/staal.jpg") center / cover; color: var(--wit); }
+.steel .kicker { color: var(--wit); }
+.rsvp { display: grid; gap: 8px; margin-top: 8px; }
+.rsvp label, .rsvp legend { font: 500 1.05rem/1.3 var(--display); }
+.rsvp .opt { font: 400 0.9rem var(--body); opacity: 0.85; }
+.rsvp input[type=text], .rsvp input[type=number], .rsvp textarea {
+  width: 100%; font: 400 1rem/1.4 var(--body); color: var(--grafiet);
+  background: var(--wit); border: 0; border-radius: 4px; padding: 12px 14px; margin-bottom: 12px;
+}
+.rsvp fieldset { border: 0; padding: 0; margin: 4px 0 12px; min-width: 0; }
+.rsvp legend { padding: 0; margin-bottom: 8px; }
+.choices { display: flex; flex-wrap: wrap; gap: 8px; }
+.choices label { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.55); border-radius: 4px; padding: 10px 14px; cursor: pointer; font-family: var(--body); font-weight: 600; font-size: 1rem; }
+.choices label:has(input:checked) { background: var(--wit); color: var(--grafiet); border-color: var(--wit); }
+.choices input { accent-color: var(--grafiet); }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.row > div { display: grid; gap: 8px; min-width: 0; }
+.check { display: flex; gap: 10px; align-items: flex-start; font-family: var(--body) !important; font-weight: 600 !important; font-size: 1rem !important; margin: 0 0 12px; }
+.check input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--wit); flex: none; }
+.rsvp button {
+  justify-self: start; margin-top: 8px; font: 600 1.15rem/1 var(--display);
+  background: var(--wit); color: var(--grafiet); border: 0; border-radius: 4px; padding: 15px 28px; cursor: pointer;
+}
+.rsvp button:hover { background: var(--staal-mist); }
+.rsvp button[disabled] { opacity: 0.6; cursor: wait; }
+.status { min-height: 1.4em; font: 500 1.1rem/1.3 var(--display); margin: 8px 0 0; }
+.status.fout { color: var(--wit); background: var(--stempelrood); padding: 8px 12px; border-radius: 4px; }
+.privacy { font-size: 0.9rem; opacity: 0.9; margin-top: 24px; }
+
+/* ---------- nieuws ---------- */
+.news { display: grid; gap: 0; }
+.news article { padding: 20px 0; border-top: 1px solid var(--staal-licht); }
+.news time { font: 500 0.95rem/1 var(--display); color: var(--staal-donker); }
+
+/* ---------- footer ---------- */
+.footer { text-align: center; padding: 48px var(--gutter) 64px; border-top: 1px solid var(--staal-licht); color: var(--staal-donker); }
+.footer .mark { margin: 0 auto 4px; font: 600 2.4rem/1 var(--display); color: var(--grafiet); }
+.footer p { margin-inline: auto; }
