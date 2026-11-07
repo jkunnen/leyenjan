@@ -1,21 +1,19 @@
-// rsvp.js · versie 7nov-8 (contactkaartjes, slapen, antwoord bekijken en aanpassen)
+// rsvp.js · versie 7nov-9 (gekoppeld aan Google Form, contactkaartjes, slapen, antwoord bekijken en aanpassen)
 // ---------------------------------------------------------------
 // Inschrijvingen gaan naar jullie Google Form (en dus de sheet).
-// Vul hieronder de link en de veldnummers in zodra het formulier
-// bestaat. Zolang FORM_ACTION leeg is, toont de site enkel een
-// melding en wordt er niets verstuurd.
+// FORM_ACTION = het adres waar antwoorden naartoe gaan ("viewform" vervangen
+// door "formResponse"). FIELDS = het nummer van elke vraag in de Google Form.
 // ---------------------------------------------------------------
-const FORM_ACTION = ""; // bv. "https://docs.google.com/forms/d/e/XXXX/formResponse"
+const FORM_ACTION = "https://docs.google.com/forms/d/e/1FAIpQLSeB-BgEY0m1j57Vzq853xD_e8b_0ZYwTgTNgeYO-UNktKqJIA/formResponse";
 const FIELDS = {
-  naam: "",        // bv. "entry.123456789"
-  komt: "",
-  volwassenen: "",
-  kinderen: "",
-  dieet: "",
-  slapen: "",
-  bericht: "",
-  soort: ""        // "nieuw" of "aanpassing", zodat je in de sheet ziet wat er veranderde
-
+  naam: "entry.328509129",
+  komt: "entry.1010029386",
+  volwassenen: "entry.1407839934",
+  kinderen: "entry.831943697",
+  dieet: "entry.393772376",
+  slapen: "entry.747051466",
+  bericht: "entry.968310925",
+  soort: "entry.1139462462"   // "nieuw" of "aanpassing"
 };
 
 // Contactkaartjes: nummer pas hier samenstellen (minder spam van bots)
