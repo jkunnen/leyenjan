@@ -18,6 +18,17 @@ const FIELDS = {
 
 // Contactkaartjes: nummer pas hier samenstellen (minder spam van bots)
 document.querySelectorAll(".contact-card").forEach((card) => {
+  if (card.dataset.mail) {                                  // mailkaartje: feest@leyenjan.be
+    const [naam, domein] = card.dataset.mail.split("|");
+    const adres = naam + "@" + domein;
+    card.innerHTML = '<span class="c-naam"></span><span class="c-nr"></span><span class="c-links"><a class="mail"></a></span>';
+    const kop = card.querySelector(".c-naam"), knop = card.querySelector(".mail");
+    const vertaalMail = () => { const T = window.T || ((nl) => nl); kop.textContent = T("Mail ons", "Écrivez-nous"); knop.textContent = T("Mailen", "Envoyer un mail"); };
+    vertaalMail(); window.addEventListener("taalwissel", vertaalMail);
+    card.querySelector(".c-nr").textContent = adres;
+    knop.href = "mailto:" + adres;
+    return;
+  }
   const d = (card.dataset.nr || "").split("|");
   if (d.length < 5) return;
   const intl = d.join("");                                  // 32497852938

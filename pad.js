@@ -201,7 +201,7 @@
         el("rect", { x: p.x - 13 + c * (26 / 9), y: p.y - 33 + r * 3, width: 26 / 9, height: 3, class: (r + c) % 2 ? "w-zwart" : "w-wit" }, g);
     }
     // een sticker, zoals op de laptop: een ronde badge in de grond onder het pad
-    if (it.sticker) {
+    if (it.sticker && false) {   // stickers staan niet meer op het pad, enkel groot in het kaartje
       const sx = p.x + 6, sy = Math.min(H - 36, p.y + 46);
       const g = el("g", { class: "p-sticker", transform: `translate(${sx},${sy}) rotate(${it.sticker === "dromen" ? 8 : -10})` });
       const R = it.sticker === "borncrazy" ? 25 : 15;
@@ -221,7 +221,7 @@
       }
     }
     // ballonnen voor de petekinderen (grafiet: van Jan, rood: van Leyla)
-    it.ballon.forEach((wie, k) => {
+    [].forEach((wie, k) => {   // ballonnen weggelaten
       const bx = p.x + (k - (it.ballon.length - 1) / 2) * 13, by = p.y - 40 - (k % 2) * 7;
       const g = el("g", { class: "p-ballon " + wie, style: `animation-delay:${(k * 0.7).toFixed(1)}s` });
       el("path", { d: `M${bx},${by + 8} q-3,8 1,13 q3,5 -1,11`, class: "bl-touw" }, g);
@@ -531,14 +531,14 @@
     hibiscus: `<svg viewBox="0 0 100 100" aria-hidden="true"><g transform="rotate(0 50 50)"><path d="M50 50C36 42 28 26 36 15q4-5 8-2q3-4 6-4q3 0 6 4q4-3 8 2C72 26 64 42 50 50Z"/><path class="ader" d="M50 50L50 18"/></g><g transform="rotate(72 50 50)"><path d="M50 50C36 42 28 26 36 15q4-5 8-2q3-4 6-4q3 0 6 4q4-3 8 2C72 26 64 42 50 50Z"/><path class="ader" d="M50 50L50 18"/></g><g transform="rotate(144 50 50)"><path d="M50 50C36 42 28 26 36 15q4-5 8-2q3-4 6-4q3 0 6 4q4-3 8 2C72 26 64 42 50 50Z"/><path class="ader" d="M50 50L50 18"/></g><g transform="rotate(216 50 50)"><path d="M50 50C36 42 28 26 36 15q4-5 8-2q3-4 6-4q3 0 6 4q4-3 8 2C72 26 64 42 50 50Z"/><path class="ader" d="M50 50L50 18"/></g><g transform="rotate(288 50 50)"><path d="M50 50C36 42 28 26 36 15q4-5 8-2q3-4 6-4q3 0 6 4q4-3 8 2C72 26 64 42 50 50Z"/><path class="ader" d="M50 50L50 18"/></g>
       <path class="meeldraad" d="M50 50Q66 40 78 24"/><circle class="stip" cx="79" cy="22" r="2.6"/><circle class="stip" cx="74" cy="22" r="2"/><circle class="stip" cx="80" cy="28" r="2"/><circle class="stip" cx="76" cy="17" r="1.8"/><circle class="stip" cx="83" cy="20" r="1.8"/>
       <circle class="hart" cx="50" cy="50" r="5"/></svg>`,
-    quoi: `<svg viewBox="0 0 120 100" aria-hidden="true"><text x="60" y="60" text-anchor="middle" class="typmachine">quoi?</text></svg>`,
+    quoi: `<svg viewBox="0 0 120 100" aria-hidden="true"><text x="60" y="60" text-anchor="middle" class="typmachine">Quoi?</text></svg>`,
     dromen: `<svg viewBox="0 0 100 100" class="sticker" aria-hidden="true">
       <circle class="st-vlak" cx="50" cy="50" r="46"/><circle class="st-ring" cx="50" cy="50" r="41"/>
       <path id="kaart-boog-dromen" d="M22,70 A33,33 0 1 1 78,70" fill="none" stroke="none"/>
       <text class="st-woord"><textPath href="#kaart-boog-dromen" startOffset="50%" text-anchor="middle">HET LEVEN VAN ONS DROMEN</textPath></text>
       <path class="st-wit" d="M30 66L41 53l5 5 8-13 16 21Z"/><path class="st-wit" d="M56 44a6 6 0 0 1 12 0"/><path class="st-wit" d="M62 33v-3M69 36l2-2M55 36l-2-2"/>
       </svg>`,
-    h: `<svg viewBox="0 0 100 100" aria-hidden="true"><path class="letter" d="M30 18v64M70 18v64M30 50h40M22 18h16M62 18h16M22 82h16M62 82h16"/></svg>`
+    h: `<svg viewBox="0 0 100 100" aria-hidden="true"><path class="hand" d="M30 24c3-4 7-5 8-2 1 5-2 22-4 38-1 9-2 17-5 22"/><path class="hand" d="M24 56c10-6 26-9 44-9"/><path class="hand" d="M62 20c4 10 4 26 2 42-1 8 0 15 4 18 3 2 6 0 7-3"/></svg>`
   };
   const inktLabel = document.createElement("figure");
   inktLabel.className = "inkt-beeld"; inktLabel.hidden = true;

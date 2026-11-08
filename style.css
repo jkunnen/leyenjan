@@ -1,4 +1,4 @@
-/* Stalen huwelijk · huisstijl · versie 7nov-31 (met Ons pad)
+/* Stalen huwelijk · huisstijl · versie 8nov-1 (met Ons pad)
    Staal en wit, Fredoka voor titels, Nunito voor tekst, stempelrood als enige knipoog. */
 :root {
   --wit: #ffffff;
@@ -192,19 +192,11 @@ p { margin: 0 0 1em; max-width: 62ch; }
 .privacy { font-size: 0.9rem; opacity: 0.9; margin-top: 24px; }
 
 /* ---------- stalen plaatjes ---------- */
-/* Een plaatje geslepen staal met vier klinknagels in de hoeken. */
+/* Een vak in hetzelfde geslepen staal als de banner en het inschrijfformulier. */
 .plaat {
-  --nagel: radial-gradient(circle at 50% 45%, #f4f6f8 0 1.2px, #8c939a 1.6px 3px, transparent 3.4px);
   position: relative; color: var(--wit);
-  background:
-    var(--nagel) 10px 10px / 8px 8px no-repeat,
-    var(--nagel) calc(100% - 10px) 10px / 8px 8px no-repeat,
-    var(--nagel) 10px calc(100% - 10px) / 8px 8px no-repeat,
-    var(--nagel) calc(100% - 10px) calc(100% - 10px) / 8px 8px no-repeat,
-    linear-gradient(rgba(31,35,40,.38), rgba(31,35,40,.38)),
-    var(--staal-donker) url("assets/staal.jpg") center / 900px auto;
+  background: var(--staal) url("assets/staal.jpg") center / cover;
   border-radius: 6px;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.18), inset 0 -2px 0 rgba(0,0,0,.18);
 }
 .platen { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 16px; margin-bottom: 44px; }
 .platen .plaat { display: grid; align-content: start; gap: 6px; padding: 26px 26px 28px; min-width: 0; }
@@ -398,4 +390,6 @@ h3.sub { font: 600 1.35rem/1.2 var(--display); margin: 0 0 14px; }
 .inkt-beeld .schrift { font: italic 700 34px/1 "Snell Roundhand", "Brush Script MT", "Segoe Script", cursive; fill: var(--grafiet); stroke: none; }
 .inkt-beeld .lijn { stroke-width: 1.8; }
 .inkt-beeld .letter { stroke-width: 7; }
+.inkt-beeld .hand { stroke-width: 5.5; }
+.inkt-beeld .hand.dun { stroke-width: 3.5; }
 @media (max-width: 640px) { .inkt-beeld { width: 76px; height: 76px; } .inkt-beeld svg { width: 58px; height: 58px; } .inkt-beeld .sticker { width: 70px; height: 70px; } }
