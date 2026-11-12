@@ -1,4 +1,4 @@
-/* Stalen huwelijk · huisstijl · versie 11nov-1 (met Ons pad)
+/* Stalen huwelijk · huisstijl · versie 12nov-1 (met Ons pad)
    Staal en wit, Fredoka voor titels, Nunito voor tekst, stempelrood als enige knipoog. */
 :root {
   /* alle stalen vlakken: de staalfoto met een lichte donkere waas, zodat witte tekst leesbaar blijft */
@@ -79,7 +79,7 @@ html { scroll-padding-top: 64px; }
 }
 
 /* ---------- sections ---------- */
-.section { padding: clamp(56px, 9vw, 112px) var(--gutter); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+.section { padding: clamp(40px, 6vw, 72px) var(--gutter); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
 .wrap { max-width: 980px; margin: 0 auto; }
 .wrap.narrow { max-width: 640px; }
 .kicker { margin: 0 0 6px; font: 400 1rem/1.2 var(--display); color: var(--staal-donker); letter-spacing: 0.04em; }
@@ -162,6 +162,8 @@ p { margin: 0 0 1em; max-width: 62ch; }
 .h-tekst { font-size: 0.98rem; }
 
 .section.tinted { background: var(--staal-mist); }
+/* minder witruimte tussen Ons pad en Praktisch */
+#verhaal { padding-bottom: clamp(24px, 3vw, 40px); }
 
 /* ---------- inschrijven (op staal) ---------- */
 .section.steel { background: var(--staal-vlak); color: var(--wit); }
